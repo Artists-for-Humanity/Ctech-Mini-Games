@@ -1,0 +1,1 @@
+directions on how to add games (for ppl who will eventually make prs)
