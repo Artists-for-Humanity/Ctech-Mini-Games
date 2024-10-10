@@ -12,7 +12,7 @@ gridArray.forEach(div => {
     
     div.addEventListener('mouseover', function() {
         div.style.backgroundImage = "url()";
-        description.innerHTML = metaTitle.innerText + "<br>" + metaDescription.innerText;
+        description.innerHTML = `<div class="text-2xl font-bold">${metaTitle.innerText}</div>` + "<br>" + metaDescription.innerText;
     });
 
     div.addEventListener('mouseout', function() {

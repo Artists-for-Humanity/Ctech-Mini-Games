@@ -1,1 +1,2 @@
-directions on how to add games (for ppl who will eventually make prs)
+# Adding your game
+In order to add your game to the repo, create a branch and add your files under a given directory (you can change the directory to the name of your game after being assigned a number)

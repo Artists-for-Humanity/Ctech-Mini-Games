@@ -13,7 +13,15 @@
 }
 
 .game-preview-lg {
-  @apply rounded-md p-4 row-span-2 bg-white bg-cover transition-all h-full w-full relative hover:scale-110 hover:z-50 hover:shadow-md
+  @apply rounded-md p-4 row-span-2 bg-white bg-cover transition-all h-full w-full relative hover:scale-110 hover:z-50 hover:shadow-md flex items-center justify-center
+}
+
+.game-preview {
+  @apply bg-center overflow-hidden
+}
+
+.game-metadata {
+  @apply self-end max-w-full text-white text-left
 }
 
 .game-tint {
@@ -21,7 +29,7 @@
 }
 
 .game-description {
-  @apply text-xs italic
+  @apply text-xs italic sr-only
 }
 
 #global-game-description {
