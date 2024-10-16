@@ -16,7 +16,7 @@ const canvas = document.getElementById('gameCanvas');
         const loadedImages = [];
         let imagesLoaded = 0;
 
-        const fruitSpeed = 2; // Constant speed for all fruits
+        const fruitSpeed = 1.5; // Constant speed for all fruits
 
         // Preload images
         fruitImages.forEach(src => {
@@ -39,11 +39,11 @@ const canvas = document.getElementById('gameCanvas');
         // Generate random fruit positions and types
         function generateFruits() {
             const spacingX = canvasWidth / 5; // Wider horizontal spacing
-            const spacingY = 100; // Wider vertical spacing
+            const spacingY = 5; // Wider vertical spacing
 
             for (let i = 0; i < numberOfFruits; i++) {
                 const x = (i % 5) * spacingX + Math.random() * (spacingX - 50); // Randomize within spacing
-                const y = -Math.random() * 200; // Start off-screen
+                const y = -Math.random() * 500; // Start off-screen
                 const fruitType = Math.floor(Math.random() * loadedImages.length);
                 fruits.push({ x: x, y: y, image: loadedImages[fruitType], speed: fruitSpeed });
             }
@@ -65,7 +65,7 @@ const canvas = document.getElementById('gameCanvas');
         function drawFruits() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             fruits.forEach(fruit => {
-                const size = 50; // Increased size
+                const size = 90; // Increased size
                 ctx.drawImage(fruit.image, fruit.x - size / 2, fruit.y - size / 2, size, size);
             });
         }
