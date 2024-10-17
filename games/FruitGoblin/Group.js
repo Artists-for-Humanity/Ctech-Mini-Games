@@ -3,27 +3,6 @@ const ctx = canvas.getContext('2d');
 
 let fruits = [];  // Store fruits in an array
 const maxFruits = 10;  // Max number of fruits to ever generate
-const canvasWidth = canvas.width;
-const canvasHeight = canvas.height;
-
-const fruitImages = [
-    'Pictures/apple.png',
-    'Pictures/strawberry.png',
-    'Pictures/watermelon.png',
-    'Pictures/grape.png'
-];
-
-const bucketImage = new Image();
-bucketImage.src = 'Pictures/bucket.png';  // Path to your bucket image
-
-const goblinImage = new Image();
-goblinImage.src = 'Pictures/goblin.png'; // Path to your goblin image (PNG)
-
-const gameOverImage = new Image();
-gameOverImage.src = 'Pictures/GameOver.png'; // Path to your game over image
-
-const youWinImage = new Image();
-youWinImage.src = 'Pictures/YouWin.png'; // Path to your you win image
 
 let missedFruits = 0; // Tracks missed fruits
 let score = 0; // Player's score
@@ -38,27 +17,42 @@ let moveLeft = false;
 let moveRight = false;
 let invertBucket = false; // Track inversion state for the bucket
 
-// Bucket position and dimensions
+// Bucket and goblin dimensions
 const bucket = {
-    x: canvasWidth / 2 - 50,
-    y: canvasHeight - 150,  // Position it higher to account for larger size
-    width: 200,  // Increased bucket size
-    height: 150  // Increased bucket height
+    width: 200,
+    height: 150,
 };
 
-// Goblin position and dimensions
 const goblin = {
-    x: 0,
-    y: canvasHeight - 100, // Position at the bottom
     width: 100,
     height: 100,
-    direction: 1 // 1 for right, -1 for left
+    direction: 1, // 1 for right, -1 for left
 };
 
-// Preload fruit and goblin images
+// Load images
+const fruitImages = [
+    'Pictures/apple.png',
+    'Pictures/strawberry.png',
+    'Pictures/watermelon.png',
+    'Pictures/grape.png',
+];
+
+const bucketImage = new Image();
+bucketImage.src = 'Pictures/bucket.png';
+
+const goblinImage = new Image();
+goblinImage.src = 'Pictures/goblin.png';
+
+const gameOverImage = new Image();
+gameOverImage.src = 'Pictures/GameOver.png';
+
+const youWinImage = new Image();
+youWinImage.src = 'Pictures/YouWin.png';
+
 const loadedImages = [];
 let imagesLoaded = 0;
 
+// Preload fruit images
 fruitImages.forEach(src => {
     const img = new Image();
     img.src = src;
@@ -71,28 +65,41 @@ fruitImages.forEach(src => {
     loadedImages.push(img);
 });
 
-// Generate random fruit positions and types (only 10 fruits total)
+// Resize canvas and update positions
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Update positions of bucket and goblin
+    bucket.x = canvas.width / 2 - bucket.width / 2;
+    bucket.y = canvas.height - bucket.height - 20; // 20px from the bottom
+    goblin.x = 0;
+    goblin.y = canvas.height - goblin.height - 20; // 20px from the bottom
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas(); // Initial call to set the canvas size
+
+// Generate random fruit positions and types
 function generateFruits() {
     fruits = [];  // Clear current fruits
     for (let i = 0; i < maxFruits; i++) {
-        const x = Math.random() * (canvasWidth - 50); // Random horizontal position
+        const x = Math.random() * (canvas.width - 50); // Random horizontal position
         const y = -Math.random() * 1500; // Start off-screen
         const fruitType = Math.floor(Math.random() * loadedImages.length);
-        fruits.push({ x: x, y: y, image: loadedImages[fruitType], speed: fruitSpeed });
+        fruits.push({ x, y, image: loadedImages[fruitType], speed: fruitSpeed });
     }
 }
 
-// Update the positions of the fruits and goblin
+// Update the positions of the fruits
 function updateFruits() {
     fruits.forEach((fruit, index) => {
         fruit.y += fruit.speed; // Move the fruit down
         // Check for collision with the bucket
         if (fruit.y + 45 > bucket.y && fruit.x > bucket.x && fruit.x < bucket.x + bucket.width) {
-            // Fruit collected
             fruits.splice(index, 1); // Remove fruit from array
             score += 10; // Increase score by 10
-        } else if (fruit.y > canvasHeight) {
-            // Fruit missed
+        } else if (fruit.y > canvas.height) {
             fruits.splice(index, 1); // Remove fruit from array
             missedFruits++; // Increment missed fruits counter
         }
@@ -111,7 +118,7 @@ function updateGoblin() {
     goblin.x += goblinSpeed * goblin.direction; // Move goblin horizontally
 
     // Change direction if the goblin hits the canvas boundaries
-    if (goblin.x <= 0 || goblin.x + goblin.width >= canvasWidth) {
+    if (goblin.x <= 0 || goblin.x + goblin.width >= canvas.width) {
         goblin.direction *= -1; // Reverse direction
     }
 
@@ -123,7 +130,6 @@ function updateGoblin() {
             fruit.y < goblin.y + goblin.height &&
             fruit.y + 50 > goblin.y
         ) {
-            // Fruit collected by goblin
             fruits.splice(index, 1); // Remove fruit from array
             score += 5; // Increase score by 5 for goblin collection
         }
@@ -142,12 +148,12 @@ function drawFruits() {
     drawScore();   // Draw score
 }
 
-// Function to draw the goblin
+// Draw the goblin
 function drawGoblin() {
     ctx.drawImage(goblinImage, goblin.x, goblin.y, goblin.width, goblin.height);
 }
 
-// Function to draw the bucket with inversion
+// Draw the bucket
 function drawBucket() {
     ctx.save(); // Save the current state
     if (invertBucket) {
@@ -159,7 +165,7 @@ function drawBucket() {
     ctx.restore(); // Restore the state
 }
 
-// Display score in the top left corner
+// Display score
 function drawScore() {
     ctx.font = '30px Arial';
     ctx.fillStyle = 'white';
@@ -171,7 +177,7 @@ function updateBucketPosition() {
     if (moveLeft && bucket.x > 0) {
         bucket.x -= bucketSpeed;
     }
-    if (moveRight && bucket.x + bucket.width < canvasWidth) {
+    if (moveRight && bucket.x + bucket.width < canvas.width) {
         bucket.x += bucketSpeed;
     }
 }
@@ -203,15 +209,15 @@ function endGame(isWin) {
 function drawEndScreen() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear the canvas
     const endImage = score >= maxFruits * 10 ? youWinImage : gameOverImage; // Decide which image to draw
-    ctx.drawImage(endImage, 0, 0, canvasWidth, canvasHeight);  // Draw the end image
+    ctx.drawImage(endImage, 0, 0, canvas.width, canvas.height);  // Draw the end image
 
     // Draw retry button
     ctx.fillStyle = 'blue';
-    ctx.fillRect(canvasWidth / 2 - 100, canvasHeight / 2 + 50, 200, 50);  // Draw button
+    ctx.fillRect(canvas.width / 2 - 100, canvas.height / 2 + 50, 200, 50);  // Draw button
 
     ctx.font = '30px Arial';
     ctx.fillStyle = 'white';
-    ctx.fillText('Retry', canvasWidth / 2 - 40, canvasHeight / 2 + 85);  // Draw button text
+    ctx.fillText('Retry', canvas.width / 2 - 40, canvas.height / 2 + 85);  // Draw button text
 
     // Add a listener for retry click
     canvas.addEventListener('click', handleRetryClick);
@@ -224,8 +230,8 @@ function handleRetryClick(e) {
     const mouseY = e.clientY - rect.top;
 
     // Check if the click was within the retry button area
-    if (mouseX >= canvasWidth / 2 - 100 && mouseX <= canvasWidth / 2 + 100 && 
-        mouseY >= canvasHeight / 2 + 50 && mouseY <= canvasHeight / 2 + 100) {
+    if (mouseX >= canvas.width / 2 - 100 && mouseX <= canvas.width / 2 + 100 && 
+        mouseY >= canvas.height / 2 + 50 && mouseY <= canvas.height / 2 + 100) {
         resetGame();  // Call reset game if the retry button was clicked
     }
 }
@@ -265,6 +271,7 @@ window.addEventListener('keyup', (e) => {
 // Start the game initially after loading images
 bucketImage.onload = () => {
     goblinImage.onload = () => {
+        resizeCanvas(); // Ensure canvas size is set before starting
         generateFruits();
         gameLoop();
     };
