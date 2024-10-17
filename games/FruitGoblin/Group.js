@@ -30,12 +30,13 @@ let score = 0; // Player's score
 let gameRunning = true; // Flag for checking game state
 const maxMissedFruits = 10; // Maximum number of missed fruits before game over
 
-const fruitSpeed = 1.2; // Constant speed for all fruits
-const bucketSpeed = 10; // Speed at which the bucket moves
-const goblinSpeed = 4; // Speed at which the goblin moves
+const fruitSpeed = 2; // Constant speed for all fruits
+const bucketSpeed = 15; // Speed at which the bucket moves
+const goblinSpeed = 20; // Speed at which the goblin moves
 
 let moveLeft = false;
 let moveRight = false;
+let invertBucket = false; // Track inversion state for the bucket
 
 // Bucket position and dimensions
 const bucket = {
@@ -65,7 +66,6 @@ fruitImages.forEach(src => {
         imagesLoaded++;
         if (imagesLoaded === fruitImages.length) {
             generateFruits();  // Start generating fruits
-            gameLoop();  // Start the game loop
         }
     };
     loadedImages.push(img);
@@ -147,15 +147,22 @@ function drawGoblin() {
     ctx.drawImage(goblinImage, goblin.x, goblin.y, goblin.width, goblin.height);
 }
 
-// Function to draw the bucket
+// Function to draw the bucket with inversion
 function drawBucket() {
-    ctx.drawImage(bucketImage, bucket.x, bucket.y, bucket.width, bucket.height);
+    ctx.save(); // Save the current state
+    if (invertBucket) {
+        ctx.scale(-1, 1); // Invert horizontally
+        ctx.drawImage(bucketImage, -bucket.x - bucket.width, bucket.y, bucket.width, bucket.height);
+    } else {
+        ctx.drawImage(bucketImage, bucket.x, bucket.y, bucket.width, bucket.height);
+    }
+    ctx.restore(); // Restore the state
 }
 
 // Display score in the top left corner
 function drawScore() {
     ctx.font = '30px Arial';
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = 'white';
     ctx.fillText(`Score: ${score}`, 20, 40); // Display score at top left
 }
 
@@ -240,8 +247,10 @@ function resetGame() {
 window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') {
         moveLeft = true;
+        invertBucket = true; // Invert bucket when left arrow is pressed
     } else if (e.key === 'ArrowRight') {
         moveRight = true;
+        invertBucket = false; // Reset inversion if right arrow is pressed
     }
 });
 
