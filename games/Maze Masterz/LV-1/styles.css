@@ -1,0 +1,27 @@
+#gameCanvas{
+    width: 1000px;
+    height: 800px;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full viewport height */
+    background-color: #f0f0f0; /* Optional background color */
+}
+
+canvas {
+    border: 10px solid black;
+    display: block; /* Remove default inline spacing */
+}
+
+.sprite {
+    width: 100px; 
+    height: 100px;
+    background-color: blue; 
+    position: absolute; 
+    top: 100px; /* Adjusted for visibility */
+    left: 200px; /* Move it 200px from the left */
+}
