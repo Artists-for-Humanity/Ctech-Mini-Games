@@ -1,0 +1,31 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+body,
+.sandworm {
+    background-color: rgb(207, 163, 106);
+}
+
+#game-board {
+    border-radius: 100px;
+    display: grid;
+    grid-template-columns: repeat(20, 20px);
+    grid-template-rows: repeat(20, 20px);
+    margin: 0;
+}
+
+.game-border-1 {
+    border: rgb(87, 61, 21) solid 10px;
+    border-radius: 0px;
+    
+}   
+
+#board {
+    position: absolute;
+    
+}
