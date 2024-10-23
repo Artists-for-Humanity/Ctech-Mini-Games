@@ -26,15 +26,17 @@ container_board {
 .cell {
     width: 50px;
     height: 50px;
-    border: 1px solid #ccc;
+    border: 0px solid #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 14px;
 }
+
 .player {
     background-color: rgb(255, 0, 0);
 }
+
 #game-board {
     border-radius: 100px;
     display: grid;
@@ -56,3 +58,10 @@ container_board {
     background-image: url('./SW-BoardA.png')
 }
 
+.food {
+    background-color: green;
+}
+
+.snake{
+    background-color:  orange;
+}
