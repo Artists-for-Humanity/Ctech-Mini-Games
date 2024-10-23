@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Dunes of Dooms</title>
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dunes of Dooms</title>
+    <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
-</head>
-<body>
-<div>
-    <div class="scores">
+  </head>
+
+  <body>
+    <container_scores>
+    <div class="scores" id="scores"> 
         <h1 id="score">000</h1>
-        <h1 id="highScore">000</h1>
+      <h1 id="highScore">000</h1>
     </div>
+</container_scores>
+
+    <container_board>
         <div class="game-border-1">
-            <div class="game-border-1">
-                <div class="game-border-3">
-                    <div id="game-board"></div>
-                </div>
-            </div>
+            <div class="grid" id="grid"></div>
+          <!-- <img id="board" src="SW-BoardA.png" alt="sandworm-board" /> -->
+    
+          <!-- <div id="game-board"></div> -->
         </div>
-</div>
-<!-- <hi id="instruction-text">Press spacebar to start the game</hi> -->
-<img id="board" src="SW-Board.png" alt="sandworm-board" />
-<!-- <img id="head" src="SW-Head.png" alt="sandworm-head" /> -->
+        <!-- <hi id="instruction-text">Press spacebar to start the game</hi> -->
+        <!-- <img id="head" src="SW-Head.png" alt="sandworm-head" /> -->
+    </container_board>
 </body>
+    
 </html>
