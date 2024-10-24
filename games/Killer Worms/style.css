@@ -33,9 +33,6 @@ container_board {
     font-size: 14px;
 }
 
-.player {
-    background-color: rgb(255, 0, 0);
-}
 
 #game-board {
     border-radius: 100px;
@@ -55,13 +52,42 @@ container_board {
 }   
 
 .grid {
-    background-image: url('./SW-BoardA.png')
+    background-image: url('./SW-BoardA.png');
 }
 
 .food {
     background-color: green;
 }
 
-.snake{
-    background-color:  orange;
+.head {
+    background-image: url('SW-Head.png');
+}
+
+.body {
+    background-image: url('SW-Body.png');
+}
+
+.turn {
+    background-image: url('SW-Turn.png');
+}
+
+.tail {
+    background-image: url('SW-Tail.png');
+}
+
+
+.rotate-up {
+    transform: rotate(90deg); /* Rotate the head to face up */
+}
+
+.rotate-down {
+    transform: rotate(270deg); /* Rotate the head to face down */
+}
+
+.rotate-left {
+    transform: rotate(0deg); /* Rotate the head to face left */
+}
+
+.rotate-right {
+    transform: rotate(180deg); /* Rotate the head to face right */
 }

@@ -1,15 +1,16 @@
 const gridWidth = 30;
 const gridHeight = 16;
-let playerX = 0;
-let playerY = 0;
+let headX = gridWidth - 1; // Start at the far right
+let headY = 0; // Start at the top
 let foodX, foodY;
-let snake = [
-    { x: playerX, y: playerY },
-    { x: playerX - 1, y: playerY },
-    { x: playerX - 2, y: playerY },
-    { x: playerX - 3, y: playerY }
+let body = [
+    { x: headX, y: headY, direction: 'ArrowLeft' },
+    { x: headX + 1, y: headY, direction: 'ArrowLeft' },
+    { x: headX + 2, y: headY, direction: 'ArrowLeft' },
+    { x: headX + 3, y: headY, direction: 'ArrowLeft' }
 ];
-let direction = 'ArrowRight'; // Initial direction
+let turns = []; // To hold the positions of turns
+let direction = 'ArrowLeft'; // Initial direction
 let score = 0;
 let highScore = 0;
 
@@ -30,7 +31,7 @@ function placeFood() {
     do {
         foodX = Math.floor(Math.random() * gridWidth);
         foodY = Math.floor(Math.random() * gridHeight);
-    } while (snake.some(segment => segment.x === foodX && segment.y === foodY)); // Ensure food doesn't spawn on the snake
+    } while (body.some(segment => segment.x === foodX && segment.y === foodY) || turns.some(turn => turn.x === foodX && turn.y === foodY));
 
     const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
     foodCell.classList.add('food');
@@ -44,28 +45,73 @@ function clearFood() {
     }
 }
 
-// Function to update player (snake) position
-function updatePlayer() {
-    // Clear previous player positions
-    const previousCell = document.querySelector('.cell.player');
-    if (previousCell) {
-        previousCell.classList.remove('player');
+// Function to update head (snake head) position
+function updateHead() {
+    const previousHeadCell = document.querySelector('.cell.head');
+    if (previousHeadCell) {
+        previousHeadCell.classList.remove('head', 'rotate-up', 'rotate-down', 'rotate-left', 'rotate-right');
     }
 
-    // Draw the snake
-    const snakeCells = document.querySelectorAll('.cell.snake');
-    snakeCells.forEach(cell => cell.classList.remove('snake'));
+    const currentHeadCell = document.querySelector(`.cell[data-x="${headX}"][data-y="${headY}"]`);
+    currentHeadCell.classList.add('head');
+    currentHeadCell.classList.add(`rotate-${direction.replace('Arrow', '').toLowerCase()}`);
+}
 
-    // Set new player position
-    const currentCell = document.querySelector(`.cell[data-x="${playerX}"][data-y="${playerY}"]`);
-    currentCell.classList.add('player');
+// Function to update body segments with staggered rotation
+function updateBody() {
+    const bodyCells = document.querySelectorAll('.cell.body, .cell.tail, .cell.turn');
+    bodyCells.forEach(cell => cell.classList.remove('body', 'tail', 'turn', 'rotate-up', 'rotate-down', 'rotate-left', 'rotate-right'));
 
-    // Draw the snake segments
-    snake.forEach(segment => {
+    body.forEach((segment, index) => {
         const segmentCell = document.querySelector(`.cell[data-x="${segment.x}"][data-y="${segment.y}"]`);
-        segmentCell.classList.add('snake');
+
+        // Check if this segment is a turn
+        if (index > 0 && segment.direction !== body[index - 1].direction) {
+            segmentCell.classList.add('turn');
+            segmentCell.classList.add(`rotate-${segment.direction.replace('Arrow', '').toLowerCase()}`);
+        } else {
+            segmentCell.classList.add('body');
+        }
+
+        // Delay rotation logic
+        setTimeout(() => {
+            if (index > 0) {
+                const previousSegment = body[index - 1];
+                segment.direction = previousSegment.direction; // Follow the segment in front
+            }
+            segmentCell.classList.add(`rotate-${segment.direction.replace('Arrow', '').toLowerCase()}`);
+        }, (index + 1) * 150); // Delay increases by 150 ms for each segment
+    });
+
+    if (body.length > 0) {
+        const tailCell = document.querySelector(`.cell[data-x="${body[0].x}"][data-y="${body[0].y}"]`);
+        tailCell.classList.add('tail'); // Tail
+        tailCell.classList.add(`rotate-${body[0].direction.replace('Arrow', '').toLowerCase()}`); // Tail rotation
+    }
+
+    turns.forEach(turn => {
+        const turnCell = document.querySelector(`.cell[data-x="${turn.x}"][data-y="${turn.y}"]`);
+        turnCell.classList.add('turn'); // Turn appearance
+        turnCell.classList.add(`rotate-${turn.direction.replace('Arrow', '').toLowerCase()}`); // Set rotation based on the last segment direction
     });
 }
+
+// Function to handle turning logic
+function handleTurn(newDirection) {
+    // Check for specific direction combinations that require a 180-degree turn
+    if ((direction === 'ArrowDown' && newDirection === 'ArrowRight') ||
+        (direction === 'ArrowRight' && newDirection === 'ArrowDown') ||
+        (direction === 'ArrowRight' && newDirection === 'ArrowUp') ||
+        (direction === 'ArrowUp' && newDirection === 'ArrowRight')) {
+        // Flip the direction
+        direction = newDirection === 'ArrowRight' ? 'ArrowLeft' : newDirection === 'ArrowDown' ? 'ArrowUp' : newDirection;
+    } else {
+        // Push the current turn direction to the turns array
+        turns.push({ x: headX, y: headY, direction: newDirection });
+        direction = newDirection; // Update direction
+    }
+}
+
 
 // Function to update the score display
 function updateScore() {
@@ -75,87 +121,94 @@ function updateScore() {
 
 // Function to reset the game
 function resetGame() {
-    playerX = 0;
-    playerY = 0;
-    snake = [
-        { x: playerX, y: playerY },
-        { x: playerX - 1, y: playerY },
-        { x: playerX - 2, y: playerY },
-        { x: playerX - 3, y: playerY }
+    headX = gridWidth - 1; // Reset to start at the far right
+    headY = 0; // Reset to start at the top
+    body = [
+        { x: headX, y: headY, direction: 'ArrowLeft' },
+        { x: headX + 1, y: headY, direction: 'ArrowLeft' },
+        { x: headX + 2, y: headY, direction: 'ArrowLeft' },
+        { x: headX + 3, y: headY, direction: 'ArrowLeft' }
     ]; // Start with 4 segments
-    direction = 'ArrowRight';
+    turns = []; // Reset turns
+    direction = 'ArrowLeft'; // Reset direction
     score = 0;
-    clearFood(); // Clear food when resetting
-    placeFood(); // Place new food
-    updatePlayer();
+    clearFood();
+    placeFood();
+    updateHead();
+    updateBody();
     updateScore();
 }
 
 // Move the snake in the current direction
 function moveSnake() {
-    // Calculate new head position based on direction
-    let newX = playerX;
-    let newY = playerY;
+    let newX = headX;
+    let newY = headY;
 
     switch (direction) {
         case 'ArrowUp':
-            if (playerY > 0) newY--;
+            if (headY > 0) newY--;
             break;
         case 'ArrowDown':
-            if (playerY < gridHeight - 1) newY++;
+            if (headY < gridHeight - 1) newY++;
             break;
         case 'ArrowLeft':
-            if (playerX > 0) newX--;
+            if (headX > 0) newX--;
             break;
         case 'ArrowRight':
-            if (playerX < gridWidth - 1) newX++;
+            if (headX < gridWidth - 1) newX++;
             break;
     }
 
-    // Check for collisions with the border
     if (newX < 0 || newX >= gridWidth || newY < 0 || newY >= gridHeight) {
         resetGame();
         return;
     }
 
-    // Check for food collision
     if (newX === foodX && newY === foodY) {
-        // Grow the snake
-        snake.push({ x: playerX, y: playerY }); // Add current position to the snake
-        const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
-
-        foodCell.classList.remove('food'); 
-        placeFood(); // Place new food
-        score++; // Increase score
+        body.push({ x: headX, y: headY, direction });
+        clearFood();
+        placeFood();
+        score++;
         if (score > highScore) {
             highScore = score; // Update high score
         }
     } else {
-        // Move the snake by removing the tail
-        snake.push({ x: playerX, y: playerY });
-        snake.shift(); // Remove the last segment of the snake
+        body.push({ x: headX, y: headY, direction });
+        body.shift();
     }
 
-    // Check for collisions with itself
-    if (snake.slice(0, -1).some(segment => segment.x === newX && segment.y === newY)) {
+    if (body.slice(0, -1).some(segment => segment.x === newX && segment.y === newY)) {
         resetGame();
         return;
     }
 
-    playerX = newX;
-    playerY = newY;
-    updatePlayer();
-    updateScore(); // Update the score display
+    if (direction !== body[body.length - 1].direction) {
+        handleTurn();
+    }
+
+    headX = newX;
+    headY = newY;
+    updateHead();
+    updateBody();
+    updateScore();
+
+    if (turns.length > 0 && body.length > 0 && body[0].x === turns[0].x && body[0].y === turns[0].y) {
+        turns.shift(); // Remove the turn
+    }
 }
 
 // Handle keydown events to change direction
 window.addEventListener('keydown', (event) => {
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
-        // Prevent reversing direction
-        if (event.key === 'ArrowUp' && direction !== 'ArrowDown') direction = 'ArrowUp';
-        else if (event.key === 'ArrowDown' && direction !== 'ArrowUp') direction = 'ArrowDown';
-        else if (event.key === 'ArrowLeft' && direction !== 'ArrowRight') direction = 'ArrowLeft';
-        else if (event.key === 'ArrowRight' && direction !== 'ArrowLeft') direction = 'ArrowRight';
+        if (event.key === 'ArrowUp' && direction !== 'ArrowDown') {
+            direction = 'ArrowUp';
+        } else if (event.key === 'ArrowDown' && direction !== 'ArrowUp') {
+            direction = 'ArrowDown';
+        } else if (event.key === 'ArrowLeft' && direction !== 'ArrowRight') {
+            direction = 'ArrowLeft';
+        } else if (event.key === 'ArrowRight' && direction !== 'ArrowLeft') {
+            direction = 'ArrowRight';
+        }
     }
 });
 
@@ -163,6 +216,6 @@ window.addEventListener('keydown', (event) => {
 setInterval(moveSnake, 150);
 
 // Initialize player position and place food
-updatePlayer();
+updateHead();
 placeFood();
-updateScore(); 
+updateScore();
