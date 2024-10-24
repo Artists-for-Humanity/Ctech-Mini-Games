@@ -10,8 +10,8 @@ let gameRunning = true; // Flag for checking game state
 const maxMissedFruits = 10; // Maximum number of missed fruits before game over
 
 const fruitSpeed = 2; // Constant speed for all fruits
-const bucketSpeed = 15; // Speed at which the bucket moves
-const goblinSpeed = 20; // Speed at which the goblin moves
+const bucketSpeed = 20; // Speed at which the bucket moves
+const goblinSpeed = 15; // Speed at which the goblin moves
 
 let moveLeft = false;
 let moveRight = false;
