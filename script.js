@@ -20,3 +20,7 @@ gridArray.forEach(div => {
         description.innerHTML = curDescription
     });
 });
+
+function redirect(link){
+    window.location = link
+}

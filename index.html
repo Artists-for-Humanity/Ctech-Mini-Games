@@ -27,28 +27,28 @@
         <br><br>
         Here's some sort of direction on how to navigate the site; click something this that and the third.
       </p>
-      <div class="game-preview game-preview-lg group" style="background-image: url(assets/suicide_squad.png);">
-        <video class="absolute top-0 left-0 w-full h-full z-[-1] object-cover scale-125 group-hover:visible invisible" src="assets/suicide_squad.mp4" autoplay muted loop loop></video>
+      <div class="game-preview game-preview-lg group" style="background-image: url(assets/suicide_squad.png); cursor: pointer;" onclick="redirect('games/Suicide Squadz/Game.html')">
+        <video class="absolute top-0 left-0 w-full h-full z-[-1] object-cover scale-125 group-hover:visible invisible" src="assets/suicide_squad.mp4" autoplay muted loop></video>
         <div class="game-tint bg-zinc-700 group-hover:bg-opacity-40 bg-opacity-0"></div>
         <span class="sr-only flex flex-col items-start group-hover:not-sr-only game-metadata h-full bottom-0 left-0 group-hover:w-screen max-w-96 z-10">
           <!-- query selector the metadata under each preview -->
           <span class="block game-title font-bold text-lg">Fruit Goblin</span>
           <span class="block game-description text-xs group-hover:truncate italic">Collect the fruit before the goblin!
           </span>
-          <span class="game-link sr-only">/some-url-here.html</span>
         </span>
       </div>
-      <div class="game-preview game-preview-sm group flex flex-col justify-end" style="background-image: url(assets/talk_tuah.png);">
-        <video height="100%" class=" min-h-100% z-[-1] absolute scale-125 max-w-96 group-hover:visible invisible max-w-screen" src="assets/talk_tuah.mp4" autoplay muted loop loop></video>
-        <div class="game-tint bg-zinc-700 group-hover:bg-opacity-40 bg-opacity-0"></div>
-        <span class="sr-only flex flex-col items-start group-hover:not-sr-only game-metadata h-full bottom-0 left-0 group-hover:w-screen max-w-96 z-10">
-          <!-- query selector the metadata under each preview -->
-          <span class="block game-title font-bold text-lg">Pinky Type</span>
-          <span class="block game-description text-xs group-hover:truncate italic">A colorful rendition of a typing test game!
+      <a href="games/Talk Tuah/index.html">
+        <div class="game-preview game-preview-sm group flex flex-col justify-end" style="background-image: url(assets/talk_tuah.png);">
+          <video height="100%" class=" min-h-100% z-[-1] absolute scale-125 max-w-96 group-hover:visible invisible max-w-screen" src="assets/talk_tuah.mp4" autoplay muted loop></video>
+          <div class="game-tint bg-zinc-700 group-hover:bg-opacity-40 bg-opacity-0"></div>
+          <span class="sr-only flex flex-col items-start group-hover:not-sr-only game-metadata h-full bottom-0 left-0 group-hover:w-screen max-w-96 z-10">
+            <!-- query selector the metadata under each preview -->
+            <span class="block game-title font-bold text-lg">Pinky Type</span>
+            <span class="block game-description text-xs group-hover:truncate italic">A colorful rendition of a typing test game!
+            </span>
           </span>
-          <span class="game-link sr-only">/some-url-here.html</span>
-        </span>
-      </div>
+        </div>
+      </a>
       <div class="game-preview game-preview-sm group" style="background-image: url(https://cloud-3x9xezdb7-hack-club-bot.vercel.app/0image.png);">
         <video height="100%" class=" min-h-100% z-[-1] absolute scale-125 max-w-96 group-hover:visible invisible max-w-screen" src="assets/demo.mov" autoplay muted loop></video>
         <div class="game-tint bg-zinc-700 group-hover:bg-opacity-40 bg-opacity-0"></div>
@@ -57,7 +57,6 @@
           <span class="block game-title font-bold text-lg">Game Example 3</span>
           <span class="block game-description text-xs group-hover:truncate italic">There's a whole new galaxy waiting to be explored! Use the arrow keys to run and jump through the space tunnels. Use the left and right arrow keys to move left and right, and press Spacebar to jump over gaps in the floor. If you move far enough to the left or right, you can even land on the walls.
           </span>
-          <span class="game-link sr-only">/some-url-here.html</span>
         </span>
       </div>
       <div id="global-game-description" class="bg-white row-span-2">
@@ -71,7 +70,6 @@
           <span class="block game-title font-bold text-lg">Game Example 4</span>
           <span class="block game-description text-xs group-hover:truncate italic">There's a whole new galaxy waiting to be explored! Use the arrow keys to run and jump through the space tunnels. Use the left and right arrow keys to move left and right, and press Spacebar to jump over gaps in the floor. If you move far enough to the left or right, you can even land on the walls.
           </span>
-          <span class="game-link sr-only">/some-url-here.html</span>
         </span>
       </div>
       <div class="game-preview game-preview-lg rounded-md p-4 row-span-2 bg-white aspect-square" style="background-image: url(https://cloud-3x9xezdb7-hack-club-bot.vercel.app/0image.png);">
@@ -82,7 +80,6 @@
           <span class="block game-title font-bold text-lg">Game Example 5</span>
           <span class="block game-description text-xs group-hover:truncate italic">There's a whole new galaxy waiting to be explored! Use the arrow keys to run and jump through the space tunnels. Use the left and right arrow keys to move left and right, and press Spacebar to jump over gaps in the floor. If you move far enough to the left or right, you can even land on the walls.
           </span>
-          <span class="game-link sr-only">/some-url-here.html</span>
         </span>
       </div>
       <div class="game-preview game-preview-sm group" style="background-image: url(https://cloud-3x9xezdb7-hack-club-bot.vercel.app/0image.png);">
@@ -93,7 +90,6 @@
           <span class="block game-title font-bold text-lg">Game Example 6</span>
           <span class="block game-description text-xs group-hover:truncate italic">There's a whole new galaxy waiting to be explored! Use the arrow keys to run and jump through the space tunnels. Use the left and right arrow keys to move left and right, and press Spacebar to jump over gaps in the floor. If you move far enough to the left or right, you can even land on the walls.
           </span>
-          <span class="game-link sr-only">/some-url-here.html</span>
         </span>
       </div>
     </div> 
@@ -101,27 +97,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
-<!-- // just finished the background image hover
-// todo: 
-// - image tint
-// - image text data showing up with the hover
-// - game description
-// note, the node stuff is just for tailwind + other optimization when ppl add their stuff its not gonna be some crazy framework
-// it should still run properly w live server
-extra cmts can go here > (just had to commrny out for potential errs)
-// add styling for game-description
--->
-
-<!-- GAME PREVIEW TEMPLATE
-    <div class="game-preview game-preview-sm group flex flex-col justify-end" style="background-image: url([IMAGE OF GAME PREVIEW]);">
-      <div class="game-tint bg-red-300 group-hover:bg-opacity-40 bg-opacity-0"></div>
-      <span class="sr-only group-hover:not-sr-only game-metadata h-full">
-        <span class="block game-title font-bold text-lg">Run 3</span>
-        <span class="block game-description text-xs group-hover:truncate italic">[DESCRIPTION]
-        </span>
-        <span class="game-link sr-only">/games/[...FILE PATH].html</span>
-      </span>
-    </div>
--->
-all g
