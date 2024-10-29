@@ -47,17 +47,12 @@ function clearFood() {
 
 // Function to update head (snake head) position
 function updateHead() {
-    const previousHeadCell = document.querySelector('.cell.head');
-    if (previousHeadCell) {
-        previousHeadCell.classList.remove('head', 'rotate-up', 'rotate-down', 'rotate-left', 'rotate-right');
-    }
-
     const currentHeadCell = document.querySelector(`.cell[data-x="${headX}"][data-y="${headY}"]`);
     currentHeadCell.classList.add('head');
     currentHeadCell.classList.add(`rotate-${direction.replace('Arrow', '').toLowerCase()}`);
 }
 
-// Function to update body segments with staggered rotation
+// Function to update body segments
 function updateBody() {
     const bodyCells = document.querySelectorAll('.cell.body, .cell.tail, .cell.turn');
     bodyCells.forEach(cell => cell.classList.remove('body', 'tail', 'turn', 'rotate-up', 'rotate-down', 'rotate-left', 'rotate-right'));
@@ -73,14 +68,8 @@ function updateBody() {
             segmentCell.classList.add('body');
         }
 
-        // Delay rotation logic
-        setTimeout(() => {
-            if (index > 0) {
-                const previousSegment = body[index - 1];
-                segment.direction = previousSegment.direction; // Follow the segment in front
-            }
-            segmentCell.classList.add(`rotate-${segment.direction.replace('Arrow', '').toLowerCase()}`);
-        }, (index + 1) * 150); // Delay increases by 150 ms for each segment
+        // Set the rotation
+        segmentCell.classList.add(`rotate-${segment.direction.replace('Arrow', '').toLowerCase()}`);
     });
 
     if (body.length > 0) {
@@ -97,21 +86,9 @@ function updateBody() {
 }
 
 // Function to handle turning logic
-function handleTurn(newDirection) {
-    // Check for specific direction combinations that require a 180-degree turn
-    if ((direction === 'ArrowDown' && newDirection === 'ArrowRight') ||
-        (direction === 'ArrowRight' && newDirection === 'ArrowDown') ||
-        (direction === 'ArrowRight' && newDirection === 'ArrowUp') ||
-        (direction === 'ArrowUp' && newDirection === 'ArrowRight')) {
-        // Flip the direction
-        direction = newDirection === 'ArrowRight' ? 'ArrowLeft' : newDirection === 'ArrowDown' ? 'ArrowUp' : newDirection;
-    } else {
-        // Push the current turn direction to the turns array
-        turns.push({ x: headX, y: headY, direction: newDirection });
-        direction = newDirection; // Update direction
-    }
+function handleTurn() {
+    turns.push({ x: headX, y: headY, direction }); // Store the direction of the turn
 }
-
 
 // Function to update the score display
 function updateScore() {
@@ -121,6 +98,12 @@ function updateScore() {
 
 // Function to reset the game
 function resetGame() {
+    // Clear all head classes from previous positions
+    const allHeadCells = document.querySelectorAll('.cell.head, .cell.rotate-up, .cell.rotate-down, .cell.rotate-left, .cell.rotate-right');
+    allHeadCells.forEach(cell => {
+        cell.classList.remove('head', 'rotate-up', 'rotate-down', 'rotate-left', 'rotate-right');
+    });
+
     headX = gridWidth - 1; // Reset to start at the far right
     headY = 0; // Reset to start at the top
     body = [
@@ -138,6 +121,7 @@ function resetGame() {
     updateBody();
     updateScore();
 }
+
 
 // Move the snake in the current direction
 function moveSnake() {
@@ -159,11 +143,13 @@ function moveSnake() {
             break;
     }
 
+    // Check for wall collisions
     if (newX < 0 || newX >= gridWidth || newY < 0 || newY >= gridHeight) {
         resetGame();
         return;
     }
 
+    // Check for food collision
     if (newX === foodX && newY === foodY) {
         body.push({ x: headX, y: headY, direction });
         clearFood();
@@ -173,25 +159,38 @@ function moveSnake() {
             highScore = score; // Update high score
         }
     } else {
+        // Move the body
         body.push({ x: headX, y: headY, direction });
-        body.shift();
+        body.shift(); // Remove the tail segment
     }
 
+    // Check for self-collision
     if (body.slice(0, -1).some(segment => segment.x === newX && segment.y === newY)) {
         resetGame();
         return;
     }
 
-    if (direction !== body[body.length - 1].direction) {
+    // Update the direction and handle turns
+    if (direction !== body[body.length - 1]?.direction) {
         handleTurn();
     }
 
+    // Check if the new head position is occupied by the body
+    const previousHeadCell = document.querySelector(`.cell[data-x="${headX}"][data-y="${headY}"]`);
+    if (previousHeadCell) {
+        previousHeadCell.classList.remove('head', 'rotate-up', 'rotate-down', 'rotate-left', 'rotate-right');
+    }
+
+    // Set the new head position
     headX = newX;
     headY = newY;
+
+    // Update head and body
     updateHead();
     updateBody();
     updateScore();
 
+    // Remove the turn if the head moves to that position
     if (turns.length > 0 && body.length > 0 && body[0].x === turns[0].x && body[0].y === turns[0].y) {
         turns.shift(); // Remove the turn
     }
