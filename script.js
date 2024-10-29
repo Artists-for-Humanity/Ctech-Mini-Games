@@ -1,26 +1,11 @@
-var gridList = document.querySelectorAll('.game-preview'); 
-var gridArray = [...gridList];
-var description = document.getElementById('global-game-description');
+const tiles = document.querySelectorAll(".tile");
 
-gridArray.forEach(div => {
-    const curImage = div.style.backgroundImage;
-    const curDescription = description.innerText;
-   
-    let metadata = div.querySelector('.game-metadata')
-    let metaTitle = metadata.querySelector('.game-title')
-    let metaDescription = metadata.querySelector('.game-description')
-    
-    div.addEventListener('mouseover', function() {
-        div.style.backgroundImage = "url()";
-        description.innerHTML = `<div class="text-2xl font-bold">${metaTitle.innerText}</div>` + "<br>" + metaDescription.innerText;
+tiles.forEach(element => {
+    element.addEventListener("mouseover", () => {
+        element.querySelector("a").classList.add("color");
     });
 
-    div.addEventListener('mouseout', function() {
-        div.style.backgroundImage = curImage;
-        description.innerHTML = curDescription
+    element.addEventListener("mouseout", () => {
+        element.querySelector("a").classList.remove("color");
     });
 });
-
-function redirect(link){
-    window.location = link
-}

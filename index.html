@@ -1,99 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-  <link rel="stylesheet" href="./styles.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
-
-    .pixelify-sans {
-      font-family: 'Pixelify Sans', sans-serif;
-    }
-  </style>
-</head>
-<body class="bg-[#313E48]">
-  <div class="w-screen py-14 md:px-24 lg:px-48 px-6">
-    <div class="relative">
-      <img class="absolute top-0 -left-20 lg:-left-28 rounded-full size-16 lg:size-20 bg-white" src="assets/logo.png">
-      <h1 class="text-5xl text-[#F26432] pixelify-sans">Creative Technology</h1>
-      <span class="block text-3xl pixelify-sans text-white">Mini Games</span>
-    </div>
-    <div class="grid grid-cols-3 auto-rows-fr gap-6 relative mt-4">
-      <p class="block row-span-2 text-white italic">
-        Imagine a vibrant, collaborative studio dedicated to crafting an eclectic mix of arcade mini-games, where each project is a fusion of creativity and technical innovation.
-        <br><br>
-        Here's some sort of direction on how to navigate the site; click something this that and the third.
-      </p>
-      <div class="game-preview game-preview-lg group" style="background-image: url(assets/suicide_squad.png); cursor: pointer;" onclick="redirect('games/Suicide Squadz/Game.html')">
-        <video class="absolute top-0 left-0 w-full h-full z-[-1] object-cover scale-125 group-hover:visible invisible" src="assets/suicide_squad.mp4" autoplay muted loop></video>
-        <div class="game-tint bg-zinc-700 group-hover:bg-opacity-40 bg-opacity-0"></div>
-        <span class="sr-only flex flex-col items-start group-hover:not-sr-only game-metadata h-full bottom-0 left-0 group-hover:w-screen max-w-96 z-10">
-          <!-- query selector the metadata under each preview -->
-          <span class="block game-title font-bold text-lg">Fruit Goblin</span>
-          <span class="block game-description text-xs group-hover:truncate italic">Collect the fruit before the goblin!
-          </span>
-        </span>
-      </div>
-      <a href="games/Talk Tuah/index.html">
-        <div class="game-preview game-preview-sm group flex flex-col justify-end" style="background-image: url(assets/talk_tuah.png);">
-          <video height="100%" class=" min-h-100% z-[-1] absolute scale-125 max-w-96 group-hover:visible invisible max-w-screen" src="assets/talk_tuah.mp4" autoplay muted loop></video>
-          <div class="game-tint bg-zinc-700 group-hover:bg-opacity-40 bg-opacity-0"></div>
-          <span class="sr-only flex flex-col items-start group-hover:not-sr-only game-metadata h-full bottom-0 left-0 group-hover:w-screen max-w-96 z-10">
-            <!-- query selector the metadata under each preview -->
-            <span class="block game-title font-bold text-lg">Pinky Type</span>
-            <span class="block game-description text-xs group-hover:truncate italic">A colorful rendition of a typing test game!
-            </span>
-          </span>
-        </div>
-      </a>
-      <div class="game-preview game-preview-sm group" style="background-image: url(https://cloud-3x9xezdb7-hack-club-bot.vercel.app/0image.png);">
-        <video height="100%" class=" min-h-100% z-[-1] absolute scale-125 max-w-96 group-hover:visible invisible max-w-screen" src="assets/demo.mov" autoplay muted loop></video>
-        <div class="game-tint bg-zinc-700 group-hover:bg-opacity-40 bg-opacity-0"></div>
-        <span class="sr-only flex flex-col items-start group-hover:not-sr-only game-metadata h-full bottom-0 left-0 group-hover:w-screen max-w-96 z-10">
-          <!-- query selector the metadata under each preview -->
-          <span class="block game-title font-bold text-lg">Game Example 3</span>
-          <span class="block game-description text-xs group-hover:truncate italic">There's a whole new galaxy waiting to be explored! Use the arrow keys to run and jump through the space tunnels. Use the left and right arrow keys to move left and right, and press Spacebar to jump over gaps in the floor. If you move far enough to the left or right, you can even land on the walls.
-          </span>
-        </span>
-      </div>
-      <div id="global-game-description" class="bg-white row-span-2">
-        Highlight different boxes for a description to play! 
-      </div>
-      <div class="game-preview game-preview-sm group" style="background-image: url(https://cloud-3x9xezdb7-hack-club-bot.vercel.app/0image.png);">
-        <video height="100%" class=" min-h-100% z-[-1] absolute scale-125 max-w-96 group-hover:visible invisible max-w-screen" src="assets/demo.mov" autoplay muted loop loop></video>
-        <div class="game-tint bg-zinc-700 group-hover:bg-opacity-40 bg-opacity-0"></div>
-        <span class="sr-only flex flex-col items-start group-hover:not-sr-only game-metadata h-full bottom-0 left-0 group-hover:w-screen max-w-96 z-10">
-          <!-- query selector the metadata under each preview -->
-          <span class="block game-title font-bold text-lg">Game Example 4</span>
-          <span class="block game-description text-xs group-hover:truncate italic">There's a whole new galaxy waiting to be explored! Use the arrow keys to run and jump through the space tunnels. Use the left and right arrow keys to move left and right, and press Spacebar to jump over gaps in the floor. If you move far enough to the left or right, you can even land on the walls.
-          </span>
-        </span>
-      </div>
-      <div class="game-preview game-preview-lg rounded-md p-4 row-span-2 bg-white aspect-square" style="background-image: url(https://cloud-3x9xezdb7-hack-club-bot.vercel.app/0image.png);">
-        <video height="100%" class=" min-h-100% z-[-1] absolute scale-125 max-w-96 group-hover:visible invisible max-w-screen" src="assets/demo.mov" autoplay muted loop></video>
-        <div class="game-tint bg-zinc-700 group-hover:bg-opacity-40 bg-opacity-0"></div>
-        <span class="sr-only flex flex-col items-start group-hover:not-sr-only game-metadata h-full bottom-0 left-0 group-hover:w-screen max-w-96 z-10">
-          <!-- query selector the metadata under each preview -->
-          <span class="block game-title font-bold text-lg">Game Example 5</span>
-          <span class="block game-description text-xs group-hover:truncate italic">There's a whole new galaxy waiting to be explored! Use the arrow keys to run and jump through the space tunnels. Use the left and right arrow keys to move left and right, and press Spacebar to jump over gaps in the floor. If you move far enough to the left or right, you can even land on the walls.
-          </span>
-        </span>
-      </div>
-      <div class="game-preview game-preview-sm group" style="background-image: url(https://cloud-3x9xezdb7-hack-club-bot.vercel.app/0image.png);">
-        <video height="100%" class=" min-h-100% z-[-1] absolute scale-125 max-w-96 group-hover:visible invisible max-w-screen" src="assets/demo.mov" autoplay muted loop></video>
-        <div class="game-tint bg-zinc-700 group-hover:bg-opacity-40 bg-opacity-0"></div>
-        <span class="sr-only flex flex-col items-start group-hover:not-sr-only game-metadata h-full bottom-0 left-0 group-hover:w-screen max-w-96 z-10">
-          <!-- query selector the metadata under each preview -->
-          <span class="block game-title font-bold text-lg">Game Example 6</span>
-          <span class="block game-description text-xs group-hover:truncate italic">There's a whole new galaxy waiting to be explored! Use the arrow keys to run and jump through the space tunnels. Use the left and right arrow keys to move left and right, and press Spacebar to jump over gaps in the floor. If you move far enough to the left or right, you can even land on the walls.
-          </span>
-        </span>
-      </div>
-    </div> 
-  </div>
-  <script src="script.js"></script>
-</body>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Creative Technology</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body style="display: flex; justify-content: center; align-items: center; flex-direction: column; height: 100vh;">
+        <div class="studio-container">
+            <div class="title">
+                <span class="highlight">Creative Technology</span> : Mini Games
+            </div>
+            <div class="description">
+            Imagine a vibrant, collaborative studio dedicated to crafting an eclectic mix of arcade mini-games, where each project is a fusion of creativity and technical innovation.
+            </div>
+        </div>                 
+		<div class="container">
+			<div class="tile">
+				<figure style="background-image: url('assets/suicide_squad.png');"></figure>
+				<a href="games/Suicide Squadz/Game.html" target="_blank">
+					<div class="info">
+						<h3>Fruit Goblin</h3>
+						<p>Amazing simple description of this content go here.</p>
+					</div>
+				</a>
+			</div>
+			<div class="tile">
+				<figure style="background-image: url('assets/pinky_type.png');"></figure>
+				<a href="games/Pinky Type/index.html">
+					<div class="info">
+						<h3>Pinky Type</h3>
+						<p>Amazing simple description of this content go here.</p>
+					</div>
+				</a>
+			</div>
+			<div class="tile tile-quad">
+				<figure style="background-image: url('');"></figure>
+				<a href="#">
+					<div class="info">
+						<h3>A title here</h3>
+						<p>Amazing simple description of this content go here.</p>
+					</div>
+				</a>
+			</div>
+			<div class="tile tile-quad">
+				<figure style="background-image: url('');"></figure>
+				<a href="#">
+					<div class="info">
+						<h3>A title here</h3>
+						<p>Amazing simple description of this content go here.</p>
+					</div>
+				</a>
+			</div>
+			<div class="tile tile-quad">
+				<figure style="background-image: url('');"></figure>
+				<a href="#">
+					<div class="info">
+						<h3>A title here</h3>
+						<p>Amazing simple description of this content go here.</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		<script src="script.js"></script>
+	</body>
 </html>
