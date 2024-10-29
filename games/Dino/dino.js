@@ -8,12 +8,7 @@ let summerHeight = 350;
 let summerX = 0;
 let summerY = 0;
 let summerImg;
-let summer = {
-  x: summerX,
-  y: summerY,
-  width: summerWidth,
-  height: summerHeight,
-};
+let summerScrollSpeed = 2; // Speed of background scroll
 
 // Dino properties
 let dinoWidth = 88;
@@ -53,7 +48,7 @@ window.onload = function () {
   dinoImg = new Image();
   dinoImg.src = "./dino assets/dino.png";
   dinoImg.onload = function () {
-    context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
+    // context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
   };
 
   update(); // Start the game loop
@@ -69,6 +64,12 @@ function jump() {
 function update() {
   requestAnimationFrame(update);
 
+  // Update summer background position for scrolling effect
+  summerX -= summerScrollSpeed;
+  if (summerX <= -summerWidth) {
+    summerX = 0; // Reset to start position
+  }
+
   // Update Dino's position
   if (dino.isJumping) {
     dino.velocityY += dino.gravity; // Apply gravity
@@ -83,7 +84,17 @@ function update() {
   }
 
   context.clearRect(0, 0, boardWidth, boardHeight); // Clear the canvas
-  context.drawImage(summerImg, summer.x, summer.y, summer.width, summer.height);
+
+  // Draw the scrolling background
+  context.drawImage(summerImg, summerX, summerY, summerWidth, summerHeight);
+  context.drawImage(
+    summerImg,
+    summerX + summerWidth,
+    summerY,
+    summerWidth,
+    summerHeight
+  ); // Draw a second image to create a seamless effect
+
   context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
 }
 
