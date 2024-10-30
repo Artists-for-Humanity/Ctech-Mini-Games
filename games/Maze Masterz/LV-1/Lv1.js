@@ -1,25 +1,19 @@
-// Lv1.js
 const sprite = document.getElementById('sprite');
-const canvas = document.getElementById('gameCanvas');
-let spriteX = 500;
-let spriteY = 150;
-const spriteWidth = 50; // Width of the sprite
-const spriteHeight = 50; // Height of the sprite
+const gameArea = document.getElementById('gameArea');
+let spriteX = 500; // Initial x-position within .game-area
+let spriteY = 150; // Initial y-position within .game-area
+const spriteWidth = 50;
+const spriteHeight = 50;
 const spriteSpeed = 5;
 
-// Define barriers
+// Define barriers (coordinates relative to .game-area)
 const barriers = [
     { x: 300, y: 200, width: 100, height: 50 }, // Barrier 1
     { x: 500, y: 400, width: 150, height: 75 }  // Barrier 2
 ];
 
 // Key press tracking
-const keys = {
-    w: false,
-    a: false,
-    s: false,
-    d: false
-};
+const keys = { w: false, a: false, s: false, d: false };
 
 // Event listeners for keydown and keyup
 window.addEventListener('keydown', function (e) {
@@ -38,7 +32,6 @@ window.addEventListener('keyup', function (e) {
 
 // Collision detection function
 function checkCollision(x, y) {
-    // Check collision with barriers
     for (let barrier of barriers) {
         if (x < barrier.x + barrier.width &&
             x + spriteWidth > barrier.x &&
@@ -50,7 +43,7 @@ function checkCollision(x, y) {
     return false;
 }
 
-// Function to update sprite position based on keypresses and collision detection
+// Update sprite position based on keypresses and collision detection
 function updateSpritePosition() {
     let newX = spriteX;
     let newY = spriteY;
@@ -60,12 +53,9 @@ function updateSpritePosition() {
     if (keys.s) newY += spriteSpeed; // Move down
     if (keys.d) newX += spriteSpeed; // Move right
 
-    // Get the canvas dimensions
-    const canvasRect = canvas.getBoundingClientRect();
-    const canvasLeft = canvasRect.left;
-    const canvasTop = canvasRect.top;
-    const canvasRight = canvasRect.right;
-    const canvasBottom = canvasRect.bottom;
+    // Get .game-area boundaries (relative to the game area)
+    const gameAreaWidth = gameArea.clientWidth;
+    const gameAreaHeight = gameArea.clientHeight;
 
     // Check for collisions with barriers
     if (!checkCollision(newX, spriteY)) {
@@ -76,11 +66,11 @@ function updateSpritePosition() {
         spriteY = newY; // Update position if no collision with barriers
     }
 
-    // Check for collision with canvas boundaries
-    if (spriteX < canvasLeft) spriteX = canvasLeft; // Left boundary
-    if (spriteX + spriteWidth > canvasRight) spriteX = canvasRight - spriteWidth; // Right boundary
-    if (spriteY < canvasTop) spriteY = canvasTop; // Top boundary
-    if (spriteY + spriteHeight > canvasBottom) spriteY = canvasBottom - spriteHeight; // Bottom boundary
+    // Check for collision with game area boundaries
+    if (spriteX < 0) spriteX = 0; // Left boundary
+    if (spriteX + spriteWidth > gameAreaWidth) spriteX = gameAreaWidth - spriteWidth; // Right boundary
+    if (spriteY < 0) spriteY = 0; // Top boundary
+    if (spriteY + spriteHeight > gameAreaHeight) spriteY = gameAreaHeight - spriteHeight; // Bottom boundary
 
     // Apply the updated position to the sprite
     sprite.style.left = spriteX + 'px';
