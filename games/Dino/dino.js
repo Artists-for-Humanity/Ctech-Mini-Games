@@ -10,6 +10,8 @@ let summerY = 0;
 let summerImg;
 let summerScrollSpeed = 2; // Speed of background scroll
 
+
+let cactus1 = {};
 // Dino properties
 let dinoWidth = 88;
 let dinoHeight = 94;
@@ -36,19 +38,24 @@ window.onload = function () {
   summerImg = new Image();
   summerImg.src = "./dino assets/Summer2.png";
   summerImg.onload = function () {
+    context.drawImage(summerImg, summerX, summerY, summerWidth, summerHeight);
+  };
+  cactus1Img = new Image();
+  cactus1Img.src = "./dino assets/c1.png";
+  cactus1Img.onload = function () {
     context.drawImage(
-      summerImg,
-      summer.x,
-      summer.y,
-      summer.width,
-      summer.height
+      cactus1Img,
+      cactus1X,
+      cactus1Y,
+      cactus1Width,
+      cactus1Height
     );
   };
 
   dinoImg = new Image();
   dinoImg.src = "./dino assets/dino.png";
   dinoImg.onload = function () {
-    // context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
+    context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
   };
 
   update(); // Start the game loop
@@ -96,6 +103,14 @@ function update() {
   ); // Draw a second image to create a seamless effect
 
   context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
+
+  context.drawImage(
+    cactus1Img,
+    cactus1X,
+    cactus1Y,
+    cactus1Width,
+    cactus1Height
+  );
 }
 
 document.addEventListener("keydown", (e) => {
