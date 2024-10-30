@@ -45,49 +45,85 @@ function clearFood() {
     }
 }
 
-// Function to update head (snake head) position
-function updateHead() {
-    const currentHeadCell = document.querySelector(`.cell[data-x="${headX}"][data-y="${headY}"]`);
-    currentHeadCell.classList.add('head');
-    currentHeadCell.classList.add(`rotate-${direction.replace('Arrow', '').toLowerCase()}`);
+// Function to get rotation style based on direction and flip state
+function getRotation(direction, flip) {
+    let rotation = '';
+    switch (direction) {
+        case 'ArrowUp':
+            rotation = 'rotate(90deg)';
+            break;
+        case 'ArrowDown':
+            rotation = 'rotate(270deg)';
+            break;
+        case 'ArrowLeft':
+            rotation = 'rotate(0deg)';
+            break;
+        case 'ArrowRight':
+            rotation = 'rotate(180deg)';
+            break;
+    }
+
+    // Apply flipping if needed
+    if (flip) {
+        rotation += ' scaleY(-1)'; // Vertical flip
+    }
+
+    return rotation;
 }
 
 // Function to update body segments
 function updateBody() {
     const bodyCells = document.querySelectorAll('.cell.body, .cell.tail, .cell.turn');
-    bodyCells.forEach(cell => cell.classList.remove('body', 'tail', 'turn', 'rotate-up', 'rotate-down', 'rotate-left', 'rotate-right'));
+    bodyCells.forEach(cell => {
+        cell.classList.remove('body', 'tail', 'turn');
+        cell.style.transform = ''; // Clear previous rotation
+    });
 
     body.forEach((segment, index) => {
         const segmentCell = document.querySelector(`.cell[data-x="${segment.x}"][data-y="${segment.y}"]`);
+        
+        // Determine if a flip is needed
+        let flip = false;
+
+        if (index > 0) {
+            const prevSegment = body[index - 1];
+            if ((prevSegment.direction === 'ArrowDown' && segment.direction === 'ArrowLeft') ||
+                (prevSegment.direction === 'ArrowUp' && segment.direction === 'ArrowRight')) {
+                flip = true; // Vertical flip
+            } else if ((prevSegment.direction === 'ArrowRight' && segment.direction === 'ArrowDown') ||
+                       (prevSegment.direction === 'ArrowLeft' && segment.direction === 'ArrowUp')) {
+                flip = true; // Horizontal flip
+            }
+        }
 
         // Check if this segment is a turn
         if (index > 0 && segment.direction !== body[index - 1].direction) {
             segmentCell.classList.add('turn');
-            segmentCell.classList.add(`rotate-${segment.direction.replace('Arrow', '').toLowerCase()}`);
+            segmentCell.style.transform = getRotation(segment.direction, flip); // Set rotation style for turn
         } else {
             segmentCell.classList.add('body');
+            segmentCell.style.transform = getRotation(segment.direction, flip); // Set rotation style for body
         }
-
-        // Set the rotation
-        segmentCell.classList.add(`rotate-${segment.direction.replace('Arrow', '').toLowerCase()}`);
     });
 
     if (body.length > 0) {
         const tailCell = document.querySelector(`.cell[data-x="${body[0].x}"][data-y="${body[0].y}"]`);
         tailCell.classList.add('tail'); // Tail
-        tailCell.classList.add(`rotate-${body[0].direction.replace('Arrow', '').toLowerCase()}`); // Tail rotation
+        tailCell.style.transform = getRotation(body[0].direction, false); // Tail rotation without flip
     }
 
     turns.forEach(turn => {
         const turnCell = document.querySelector(`.cell[data-x="${turn.x}"][data-y="${turn.y}"]`);
-        turnCell.classList.add('turn'); // Turn appearance
-        turnCell.classList.add(`rotate-${turn.direction.replace('Arrow', '').toLowerCase()}`); // Set rotation based on the last segment direction
+        turnCell.classList.add('turn');
+        turnCell.style.transform = getRotation(turn.direction, false); // Set rotation for turns without flip
     });
 }
 
-// Function to handle turning logic
-function handleTurn() {
-    turns.push({ x: headX, y: headY, direction }); // Store the direction of the turn
+// Function to update head (snake head) position
+function updateHead() {
+    const currentHeadCell = document.querySelector(`.cell[data-x="${headX}"][data-y="${headY}"]`);
+    currentHeadCell.classList.add('head');
+    currentHeadCell.style.transform = getRotation(direction, false); // Set rotation style without flip
 }
 
 // Function to update the score display
@@ -121,7 +157,6 @@ function resetGame() {
     updateBody();
     updateScore();
 }
-
 
 // Move the snake in the current direction
 function moveSnake() {
@@ -185,15 +220,10 @@ function moveSnake() {
     headX = newX;
     headY = newY;
 
-    // Update head and body
-    updateHead();
-    updateBody();
+    // Update body and head
+    updateBody();  // Update the body first
+    updateHead();  // Update the head last
     updateScore();
-
-    // Remove the turn if the head moves to that position
-    if (turns.length > 0 && body.length > 0 && body[0].x === turns[0].x && body[0].y === turns[0].y) {
-        turns.shift(); // Remove the turn
-    }
 }
 
 // Handle keydown events to change direction
@@ -211,8 +241,8 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
-// Game loop to move the snake every 150 milliseconds
-setInterval(moveSnake, 150);
+// Game loop to move the snake every 200 milliseconds
+setInterval(moveSnake, 200);
 
 // Initialize player position and place food
 updateHead();

@@ -76,18 +76,13 @@ container_board {
 }
 
 
-.rotate-up {
-    transform: rotate(90deg); /* Rotate the head to face up */
-}
-
-.rotate-down {
-    transform: rotate(270deg); /* Rotate the head to face down */
-}
-
-.rotate-left {
-    transform: rotate(0deg); /* Rotate the head to face left */
-}
-
+.rotate-up,
+.rotate-down,
+.rotate-left,
 .rotate-right {
-    transform: rotate(180deg); /* Rotate the head to face right */
+    /* Remove these styles as they are now handled in JavaScript */
+}
+
+.rotate-vertical {
+    transform: scaleY(-1); /* Keep this if you still want to flip vertically */
 }
