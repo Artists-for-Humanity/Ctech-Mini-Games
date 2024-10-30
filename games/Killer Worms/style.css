@@ -56,7 +56,7 @@ container_board {
 }
 
 .food {
-    background-color: green;
+    background-image: url('z.Human.png');
 }
 
 .head {
@@ -75,6 +75,16 @@ container_board {
     background-image: url('SW-Tail.png');
 }
 
+.blood {
+    position: absolute;
+    width: 150px;  /* Adjust based on cell size */
+    height: 150px; /* Adjust based on cell size */
+    background-image: url('z.Blood.png'); /* Add your blood image path */
+    background-size: cover;
+    display: none; /* Initially hidden */
+    opacity: 0;
+    transition: opacity 3s ease-out; /* Fade out effect */
+}
 
 .rotate-up,
 .rotate-down,

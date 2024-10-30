@@ -34,11 +34,20 @@ function placeFood() {
     foodCell.classList.add('food');
 }
 
+function placeBlood() {
+    bloodX = Math.floor(Math.random() * gridWidth);
+    bloodY = Math.floor(Math.random() * gridHeight);
+    const bloodCell = document.querySelector(`.cell[data-x="${bloodX}"][data-y="${bloodY}"]`);
+    bloodCell.classList.add('food');
+}
+
+
 // Function to clear food from the grid
 function clearFood() {
     const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
     if (foodCell) {
         foodCell.classList.remove('food');
+        
     }
 }
 
@@ -65,6 +74,27 @@ function moveFood() {
     // Place food in the new position
     const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
     foodCell.classList.add('food');
+}
+
+
+
+// Function to show blood effect
+function showBloodEffect(x, y) {
+    const bloodEffect = document.getElementById('blood');
+    bloodEffect.style.left = `${x * 150}px`; // Adjust based on cell size
+    bloodEffect.style.top = `${y * 150}px`; // Adjust based on cell size
+    bloodEffect.style.opacity = '1'; // Make it visible
+    bloodEffect.style.display = 'block'; // Show the image
+
+    // Fade out after 3 seconds
+    setTimeout(() => {
+        bloodEffect.style.opacity = '0'; // Fade out
+    }, 0); // Start fading immediately
+
+    // Hide the image after fading out
+    setTimeout(() => {
+        bloodEffect.style.display = 'none';
+    }, 3000); // Match the duration of the fade out
 }
 
 // Function to get rotation style based on direction and flip state
@@ -211,6 +241,8 @@ function moveSnake() {
         body.push({ x: headX, y: headY, direction });
         clearFood();
         placeFood();
+        console.log(headX, headY);
+        showBloodEffect(headX, headY); // Show blood effect at the head position
         score++;
         if (score > highScore) {
             highScore = score; // Update high score
@@ -266,12 +298,11 @@ window.addEventListener('keydown', (event) => {
 // Game loop to move the snake every 200 milliseconds
 setInterval(() => {
     moveSnake();
-     // Move food in sync with the snake
 }, 200);
 
-setInterval(() => {moveFood();
-    
-},800)
+setInterval(()=> {
+    moveFood();
+},800);
 
 // Initialize player position and place food
 updateHead();
