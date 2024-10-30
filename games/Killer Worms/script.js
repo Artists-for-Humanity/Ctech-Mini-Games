@@ -26,13 +26,10 @@ for (let y = 0; y < gridHeight; y++) {
     }
 }
 
-// Function to place food at a random position
+// Function to place food at the initial position
 function placeFood() {
-    do {
-        foodX = Math.floor(Math.random() * gridWidth);
-        foodY = Math.floor(Math.random() * gridHeight);
-    } while (body.some(segment => segment.x === foodX && segment.y === foodY) || turns.some(turn => turn.x === foodX && turn.y === foodY));
-
+    foodX = Math.floor(Math.random() * gridWidth);
+    foodY = Math.floor(Math.random() * gridHeight);
     const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
     foodCell.classList.add('food');
 }
@@ -43,6 +40,31 @@ function clearFood() {
     if (foodCell) {
         foodCell.classList.remove('food');
     }
+}
+
+// Function to move food in the direction of the snake
+function moveFood() {
+    clearFood(); // Clear the current food position
+
+    // Move food in the direction of the snake
+    switch (direction) {
+        case 'ArrowUp':
+            if (foodY > 0) foodY--;
+            break;
+        case 'ArrowDown':
+            if (foodY < gridHeight - 1) foodY++;
+            break;
+        case 'ArrowLeft':
+            if (foodX > 0) foodX--;
+            break;
+        case 'ArrowRight':
+            if (foodX < gridWidth - 1) foodX++;
+            break;
+    }
+
+    // Place food in the new position
+    const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
+    foodCell.classList.add('food');
 }
 
 // Function to get rotation style based on direction and flip state
@@ -242,7 +264,14 @@ window.addEventListener('keydown', (event) => {
 });
 
 // Game loop to move the snake every 200 milliseconds
-setInterval(moveSnake, 200);
+setInterval(() => {
+    moveSnake();
+     // Move food in sync with the snake
+}, 200);
+
+setInterval(() => {moveFood();
+    
+},800)
 
 // Initialize player position and place food
 updateHead();
