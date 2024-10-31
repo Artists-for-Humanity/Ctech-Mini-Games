@@ -34,14 +34,6 @@ function placeFood() {
     foodCell.classList.add('food');
 }
 
-function placeBlood() {
-    bloodX = Math.floor(Math.random() * gridWidth);
-    bloodY = Math.floor(Math.random() * gridHeight);
-    const bloodCell = document.querySelector(`.cell[data-x="${bloodX}"][data-y="${bloodY}"]`);
-    bloodCell.classList.add('food');
-}
-
-
 // Function to clear food from the grid
 function clearFood() {
     const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
@@ -74,27 +66,6 @@ function moveFood() {
     // Place food in the new position
     const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
     foodCell.classList.add('food');
-}
-
-
-
-// Function to show blood effect
-function showBloodEffect(x, y) {
-    const bloodEffect = document.getElementById('blood');
-    bloodEffect.style.left = `${x * 150}px`; // Adjust based on cell size
-    bloodEffect.style.top = `${y * 150}px`; // Adjust based on cell size
-    bloodEffect.style.opacity = '1'; // Make it visible
-    bloodEffect.style.display = 'block'; // Show the image
-
-    // Fade out after 3 seconds
-    setTimeout(() => {
-        bloodEffect.style.opacity = '0'; // Fade out
-    }, 0); // Start fading immediately
-
-    // Hide the image after fading out
-    setTimeout(() => {
-        bloodEffect.style.display = 'none';
-    }, 3000); // Match the duration of the fade out
 }
 
 // Function to get rotation style based on direction and flip state
@@ -210,6 +181,35 @@ function resetGame() {
     updateScore();
 }
 
+// Create a blood effect div and append it to the grid
+const bloodEffect = document.createElement('div');
+bloodEffect.classList.add('blood');
+document.getElementById('grid').appendChild(bloodEffect);
+
+function showBloodEffect(x, y) {
+    const cellSize = 50; // Size of each cell in the grid
+    const bloodSize = cellSize * 3; // Blood effect covers 3x3 grid
+
+    // Set the position of the blood effect based on the head's coordinates
+    bloodEffect.style.left = `${x * cellSize - (bloodSize / 2) + (cellSize / 2)}px`; // Centering the blood effect
+    bloodEffect.style.top = `${y * cellSize - (bloodSize / 2) + (cellSize / 2)}px`; // Centering the blood effect
+    bloodEffect.style.display = 'block'; // Make it visible
+    bloodEffect.style.opacity = '1'; // Reset opacity
+
+    // Fade out after 3 seconds
+    setTimeout(() => {
+        bloodEffect.style.opacity = '0'; // Fade out
+    }, 0); // Start fading immediately
+
+    // Hide the image after fading out
+    setTimeout(() => {
+        bloodEffect.style.display = 'none';
+    }, 3000); // Match the duration of the fade out
+}
+
+
+
+
 // Move the snake in the current direction
 function moveSnake() {
     let newX = headX;
@@ -241,7 +241,6 @@ function moveSnake() {
         body.push({ x: headX, y: headY, direction });
         clearFood();
         placeFood();
-        console.log(headX, headY);
         showBloodEffect(headX, headY); // Show blood effect at the head position
         score++;
         if (score > highScore) {

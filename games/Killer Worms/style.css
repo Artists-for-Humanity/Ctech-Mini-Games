@@ -22,6 +22,7 @@ container_board {
     display: grid;
     grid-template-columns: repeat(30, 50px);
     grid-template-rows: repeat(16, 50px);
+    position: relative; /* Make sure the grid is relative */
 }
 .cell {
     width: 50px;
@@ -76,15 +77,18 @@ container_board {
 }
 
 .blood {
-    position: absolute;
-    width: 150px;  /* Adjust based on cell size */
-    height: 150px; /* Adjust based on cell size */
-    background-image: url('z.Blood.png'); /* Add your blood image path */
-    background-size: cover;
+    width: 150px;  /* Adjust this based on your cell size (e.g., 50px * 3) */
+    height: 150px; /* Adjust this based on your cell size (e.g., 50px * 3) */
+    background-image: url('z.Blood.png'); /* Your blood image */
+    background-size: cover; /* Ensure the image covers the div */
+    position: absolute; /* Position it absolutely within the grid */
+    z-index: 0; /* Ensure it's under the snake's head */
+    opacity: 1; /* Fully visible */
+    transition: opacity 3s; /* Fade out transition */
     display: none; /* Initially hidden */
-    opacity: 0;
-    transition: opacity 3s ease-out; /* Fade out effect */
 }
+
+
 
 .rotate-up,
 .rotate-down,
