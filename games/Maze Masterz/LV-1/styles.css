@@ -1,3 +1,10 @@
+#gameCanvas {
+    width: 1240px;
+    height: 824px;
+    border: 40px solid black; /* Add border to visualize the canvas */
+    position: relative; /* To position barriers inside */
+}
+
 body {
     margin: 0;
     display: flex;
@@ -7,41 +14,14 @@ body {
     background-color: #f0f0f0; /* Optional background color */
 }
 
-.game-area {
-    width: 800px;
-    height: 600px;
-    border: 10px solid black; /* Outer border */
-    position: relative;
-    box-sizing: content-box; /* Ensure border is outside the area */
-    background-color: transparent; /* Transparent center */
-    margin: auto; /* Center in the viewport */
-}
-
-
 .sprite {
     width: 50px; 
     height: 50px;
     background-color: blue; 
     position: absolute; 
-    top: 150px; /* Initial vertical position */
-    left: 500px; /* Initial horizontal position */
 }
 
 .barrier {
     position: absolute;
-    background-color: red;
-}
-
-#barrier1 {
-    left: 300px;
-    top: 200px;
-    width: 100px;
-    height: 50px;
-}
-
-#barrier2 {
-    left: 500px;
-    top: 400px;
-    width: 150px;
-    height: 75px;
+    background-color: rgb(0, 0, 0);
 }
