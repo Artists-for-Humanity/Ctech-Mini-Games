@@ -13,6 +13,9 @@ let turns = []; // To hold the positions of turns
 let direction = 'ArrowLeft'; // Initial direction
 let score = 0;
 let highScore = 0;
+let isInMenu = true;  // We start in the menu
+let gameInterval;
+
 
 // Create the grid
 const grid = document.getElementById('grid');
@@ -25,6 +28,64 @@ for (let y = 0; y < gridHeight; y++) {
         grid.appendChild(cell);
     }
 }
+
+function drawMenu() {
+    // Darken the background by overlaying a semi-transparent black surface
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";  // Semi-transparent black
+    ctx.fillRect(0, 0, canvas.width, canvas.height);  // Full canvas
+
+    // Menu text
+    ctx.fillStyle = "white";  // White text
+    ctx.font = "40px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.fillText("Snake Game", canvas.width / 2, canvas.height / 4);
+    ctx.font = "20px Arial";
+    ctx.fillText("Press 'Enter' to Start", canvas.width / 2, canvas.height / 2);
+    ctx.fillText("Press 'Esc' to Quit", canvas.width / 2, canvas.height / 1.5);
+}
+
+function handleInput(event) {
+    if (isInMenu) {
+        // If in the menu screen, handle the Enter and Esc key presses
+        if (event.key === "Enter") {
+            startGame();  // Start the game when Enter is pressed
+        } else if (event.key === "Escape") {
+            window.close();  // Close the game window (optional)
+        }
+    } else {
+        // If in the game, handle snake controls (arrow keys)
+        if (event.key === "ArrowUp") {
+            snake.changeDirection({ x: 0, y: -1 });
+        } else if (event.key === "ArrowDown") {
+            snake.changeDirection({ x: 0, y: 1 });
+        } else if (event.key === "ArrowLeft") {
+            snake.changeDirection({ x: -1, y: 0 });
+        } else if (event.key === "ArrowRight") {
+            snake.changeDirection({ x: 1, y: 0 });
+        }
+    }
+}
+
+function startGame() {
+    isInMenu = false;  // Exit the menu
+    snake = new Snake();  // Reset the snake
+    food = new Food();  // Reset the food
+    gameInterval = setInterval(updateGame, 1000 / 15);  // Start the game loop (15 FPS)
+}
+
+function gameLoop() {
+    if (isInMenu) {
+        drawMenu();  // Show the menu screen
+    } else {
+        updateGame();  // Update and draw the game screen when not in the menu
+    }
+}
+
+window.addEventListener('keydown', handleInput);  // Handle key events for the menu/game
+
+
 
 // Function to place food at the initial position
 function placeFood() {

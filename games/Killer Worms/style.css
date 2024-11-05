@@ -4,6 +4,17 @@ body{
     background-color: rgb(207, 163, 106);
 }
 
+body {
+    background-image: url('z.BG.png');
+    background-size: cover; /* Ensures the image covers the entire screen */
+    background-position: center center; /* Centers the image */
+    background-attachment: fixed; /* Keeps the image fixed while scrolling (optional) */
+    height: 100vh; /* Makes the body take the full viewport height */
+    margin: 0; /* Removes any default margin */
+}
+
+
+
 container_scores {
     display: flex;
     align-items: center;
