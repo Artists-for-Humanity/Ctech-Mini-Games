@@ -15,7 +15,7 @@ let cactusArray = [];
 let cactus1Width = 34;
 let cactus2Width = 69;
 let cactus3Width = 102;
-// let cactusHeight = 70;
+let cactusHeight = 70; // Defined height for cactus
 
 let cactus1Img;
 let cactus2Img;
@@ -33,7 +33,7 @@ let dino = {
   y: dinoY,
   width: dinoWidth,
   height: dinoHeight,
-  gravity: 0.1,
+  gravity: 0.6, // Adjusted gravity for a better fall speed
   velocityY: 0,
   isJumping: false,
 };
@@ -71,7 +71,7 @@ window.onload = function () {
 
 // Function to generate a random cactus type
 function generateCactus() {
-  let cactusType = Math.floor(Math.random() * 2) + 1;
+  let cactusType = Math.floor(Math.random() * 3) + 1; // Randomly choose between 1, 2, or 3
   let cactusWidth =
     cactusType === 1
       ? cactus1Width
@@ -110,7 +110,7 @@ function checkCollision() {
 // Jumping function
 function jump() {
   if (!dino.isJumping) {
-    dino.velocityY = -10; // Adjust for jump height
+    dino.velocityY = -12; // Adjust for jump height
     dino.isJumping = true;
   }
 }
