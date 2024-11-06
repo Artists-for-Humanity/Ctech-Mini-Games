@@ -139,7 +139,7 @@ function resetGame() {
     score = 0;
     clearFood();
     placeFood();
-    placeCacti();  // Place 40 cacti
+    placeCacti();  // Place 35 cacti
     updateHead();
     updateBody();
     updateScore();
@@ -228,11 +228,11 @@ function updateBody() {
 
 // === Cacti Functions ===
 
-// Function to place 40 cacti randomly
+// Function to place 35 cacti randomly
 function placeCacti() {
     cacti = []; // Reset the cactus array
 
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 35; i++) {
         let cactusX, cactusY;
         // Randomly place each cactus, avoiding the snake's head, body, and food
         do {
@@ -361,5 +361,5 @@ setInterval(() => {
 // === Initial Setup ===
 updateHead();
 placeFood();
-placeCacti();  // Place 40 cacti initially
+placeCacti();  // Place 35 cacti initially
 updateScore();
