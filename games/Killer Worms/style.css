@@ -71,6 +71,11 @@ container_board {
     background-image: url('z.Human.png');
 }
 
+.cell.cactus {
+    background-image: url('z.Cactus.png')
+}
+
+
 .head {
     background-image: url('SW-Head.png');
 }
