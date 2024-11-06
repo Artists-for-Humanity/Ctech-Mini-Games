@@ -68,6 +68,7 @@ function updateSpritePosition() {
     if (!checkCollision(spriteX, newY) && newY >= 0 && newY + spriteHeight <= canvasHeight) {
         spriteY = newY;
     }
+    
 
     // Update sprite's visual position
     sprite.style.left = spriteX + 'px';
