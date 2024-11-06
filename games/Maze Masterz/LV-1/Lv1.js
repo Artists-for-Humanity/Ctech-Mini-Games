@@ -6,20 +6,26 @@ const spriteWidth = 50;
 const spriteHeight = 50;
 const spriteSpeed = 5;
 
+// Define maze barriers
 const barriers = [
     { x: 0, y: 75, width: 700, height: 50, element: document.getElementById('barrier1') },
-    { x: 400, y: 125, width: 300, height: 75, element: document.getElementById('barrier2') }
+    { x: 400, y: 125, width: 300, height: 75, element: document.getElementById('barrier2') },
+    
+    // New maze barriers
+    { x: 0, y: 300, width: 200, height: 50, element: createBarrier() },
+    { x: 250, y: 200, width: 50, height: 250, element: createBarrier() },
+    { x: 100, y: 500, width: 500, height: 50, element: createBarrier() },
+    { x: 650, y: 300, width: 50, height: 300, element: createBarrier() },
+    { x: 800, y: 100, width: 50, height: 500, element: createBarrier() },
+    { x: 850, y: 550, width: 300, height: 50, element: createBarrier() },
+    { x: 1150, y: 400, width: 50, height: 150, element: createBarrier() },
+    { x: 600, y: 700, width: 400, height: 50, element: createBarrier() },
+    { x: 200, y: 600, width: 50, height: 200, element: createBarrier() }
 ];
 
 // Key press tracking
-const keys = {
-    w: false,
-    a: false,
-    s: false,
-    d: false
-};
+const keys = { w: false, a: false, s: false, d: false };
 
-// Event listeners for keydown and keyup
 window.addEventListener('keydown', (e) => {
     if (e.key === 'w') keys.w = true;
     if (e.key === 'a') keys.a = true;
@@ -57,11 +63,9 @@ function updateSpritePosition() {
     if (keys.s) newY += spriteSpeed;
     if (keys.d) newX += spriteSpeed;
 
-    // Get `gameCanvas` dimensions
     const canvasWidth = gameCanvas.clientWidth;
     const canvasHeight = gameCanvas.clientHeight;
 
-    // Check for collisions with barriers and boundaries
     if (!checkCollision(newX, spriteY) && newX >= 0 && newX + spriteWidth <= canvasWidth) {
         spriteX = newX;
     }
@@ -70,9 +74,16 @@ function updateSpritePosition() {
     }
     
 
-    // Update sprite's visual position
     sprite.style.left = spriteX + 'px';
     sprite.style.top = spriteY + 'px';
+}
+
+// Function to create and return a new barrier element
+function createBarrier() {
+    const barrier = document.createElement('div');
+    barrier.classList.add('barrier');
+    gameCanvas.appendChild(barrier);
+    return barrier;
 }
 
 // Update barrier visual positions
