@@ -17,6 +17,11 @@ let direction = 'ArrowLeft'; // Initial direction
 let score = 0;
 let highScore = 0;
 let cacti = []; // Array to hold cactus positions
+let lastMoveTime = 0; // Track the last time the snake moved
+const moveCooldown = 200; // Cooldown time in milliseconds (200ms)
+
+
+
 
 // Create the grid and initialize cells
 const grid = document.getElementById('grid');
@@ -41,6 +46,13 @@ document.getElementById('grid').appendChild(bloodEffect);
 function updateScore() {
     const scoreDisplay = document.getElementById('score');
     scoreDisplay.innerText = `Score: ${score} | High Score: ${highScore}`;
+}
+
+function startCooldown() {
+    canChangeDirection = false; // Block further direction changes
+    setTimeout(() => {
+        canChangeDirection = true; // Allow direction changes after cooldown
+    }, directionCooldown);
 }
 
 // Function to get rotation style based on direction and flip state
@@ -112,6 +124,8 @@ function moveFood() {
     foodCell.classList.add('food');
 }
 
+// === Reset Game Function ===
+
 // Function to reset the game
 function resetGame() {
     // Clear all head classes from previous positions
@@ -126,6 +140,12 @@ function resetGame() {
         cell.classList.remove('cactus');
     });
 
+    // Clear all rocks
+    const allRockCells = document.querySelectorAll('.cell.rock');
+    allRockCells.forEach(cell => {
+        cell.classList.remove('rock');
+    });
+
     headX = gridWidth - 1; // Reset to start at the far right
     headY = 0; // Reset to start at the top
     body = [
@@ -138,11 +158,99 @@ function resetGame() {
     direction = 'ArrowLeft'; // Reset direction
     score = 0;
     clearFood();
-    placeFood();
-    placeCacti();  // Place 35 cacti
+    placeFood(); // Place food initially
+    placeCacti();  // Place 25 cacti initially
+    placeRocks();  // Place 20 rocks initially
     updateHead();
     updateBody();
     updateScore();
+}
+
+
+// === Place Rocks ===
+
+// Function to place 20 rocks randomly on the grid
+function placeRocks() {
+    rocks = []; // Reset the rocks array
+
+    for (let i = 0; i < 20; i++) {
+        let rockX, rockY;
+        // Randomly place each rock, avoiding the snake's head, body, and food
+        do {
+            rockX = Math.floor(Math.random() * gridWidth);
+            rockY = Math.floor(Math.random() * gridHeight);
+        } while (
+            (rockX === headX && rockY === headY) || // Avoid the snake head
+            body.some(segment => segment.x === rockX && segment.y === rockY) || // Avoid the body
+            (rockX === foodX && rockY === foodY) // Avoid the food
+        );
+
+        rocks.push({ x: rockX, y: rockY });
+        const rockCell = document.querySelector(`.cell[data-x="${rockX}"][data-y="${rockY}"]`);
+        if (rockCell) {
+            rockCell.classList.add('rock');
+        }
+    }
+}
+
+
+// === Rock Collision Function ===
+
+// Function to handle collisions with rocks
+function handleRockCollision(x, y) {
+    // Add a visual effect to show the collision with a rock
+    showRockEffect(x, y);
+}
+
+// === Rock Visual Effect ===
+
+// Function to show a collision effect when hitting a rock
+function showRockEffect(x, y) {
+    const cellSize = 50;
+    const rockEffectSize = cellSize * 2;
+
+    // Set the position of the effect based on the rock's coordinates
+    bloodEffect.style.left = `${x * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
+    bloodEffect.style.top = `${y * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
+    bloodEffect.style.display = 'block';
+    bloodEffect.style.opacity = '1';
+
+    setTimeout(() => {
+        bloodEffect.style.opacity = '0';
+    }, 1000);
+
+    setTimeout(() => {
+        bloodEffect.style.display = 'none';
+    }, 2000);
+}
+
+
+// Function to handle collisions with rocks
+function handleRockCollision(x, y) {
+    // Add a visual effect to show the collision with a rock
+    showRockEffect(x, y);
+}
+
+// === Rock Visual Effect ===
+
+// Function to show a collision effect when hitting a rock
+function showRockEffect(x, y) {
+    const cellSize = 50;
+    const rockEffectSize = cellSize * 2;
+
+    // Set the position of the effect based on the rock's coordinates
+    bloodEffect.style.left = `${x * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
+    bloodEffect.style.top = `${y * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
+    bloodEffect.style.display = 'block';
+    bloodEffect.style.opacity = '1';
+
+    setTimeout(() => {
+        bloodEffect.style.opacity = '0';
+    }, 1000);
+
+    setTimeout(() => {
+        bloodEffect.style.display = 'none';
+    }, 2000);
 }
 
 // === Blood Effect ===
@@ -228,11 +336,11 @@ function updateBody() {
 
 // === Cacti Functions ===
 
-// Function to place 35 cacti randomly
+// Function to place  cacti randomly
 function placeCacti() {
     cacti = []; // Reset the cactus array
 
-    for (let i = 0; i < 35; i++) {
+    for (let i = 0; i < 25; i++) {
         let cactusX, cactusY;
         // Randomly place each cactus, avoiding the snake's head, body, and food
         do {
@@ -254,11 +362,12 @@ function placeCacti() {
 
 // === Game Loop ===
 
-// Function to move the snake in the current direction
+// Modify the game loop to handle rock collision
 function moveSnake() {
     let newX = headX;
     let newY = headY;
 
+    // Move the snake based on the current direction
     switch (direction) {
         case 'ArrowUp':
             if (headY > 0) newY--;
@@ -276,7 +385,7 @@ function moveSnake() {
 
     // Check for wall collisions
     if (newX < 0 || newX >= gridWidth || newY < 0 || newY >= gridHeight) {
-        resetGame();
+        resetGame(); // Reset if wall collision occurs
         return;
     }
 
@@ -285,15 +394,15 @@ function moveSnake() {
         body.push({ x: headX, y: headY, direction });
         clearFood();
         placeFood();
-        showBloodEffect(headX, headY); // Show blood effect at the head position
+        showBloodEffect(headX, headY);
         score++;
         if (score > highScore) {
-            highScore = score; // Update high score
+            highScore = score;
         }
     } else {
         // Move the body
         body.push({ x: headX, y: headY, direction });
-        body.shift(); // Remove the tail segment
+        body.shift(); // Remove the tail
     }
 
     // Check for self-collision
@@ -302,32 +411,90 @@ function moveSnake() {
         return;
     }
 
-    // Check for cactus collision
+    // Handle cactus collision
     if (cacti.some(cactus => cactus.x === newX && cactus.y === newY)) {
         resetGame();
         return;
     }
 
-    // Update the direction and handle turns
-    if (direction !== body[body.length - 1]?.direction) {
-        handleTurn();
+    // Handle rock collision, but don't reset the game
+    if (rocks.some(rock => rock.x === newX && rock.y === newY)) {
+        handleRockCollision(newX, newY);
     }
 
-    // Check if the new head position is occupied by the body
+    // Remove the previous head
     const previousHeadCell = document.querySelector(`.cell[data-x="${headX}"][data-y="${headY}"]`);
     if (previousHeadCell) {
-        previousHeadCell.classList.remove('head', 'rotate-up', 'rotate-down', 'rotate-left', 'rotate-right');
+        previousHeadCell.classList.remove('head');
+        previousHeadCell.style.transform = ''; // Clear the rotation style
     }
 
     // Set the new head position
     headX = newX;
     headY = newY;
 
-    // Update body and head
-    updateBody();  // Update the body first
-    updateHead();  // Update the head last
+    // Update the body and head
+    updateBody();  // Update body first
+    updateHead();  // Then update the head last
     updateScore();
 }
+
+// === Rock Collision Function ===
+
+// Function to handle collisions with rocks
+function handleRockCollision(x, y) {
+    // Remove the rock from the grid
+    removeRock(x, y);
+
+    // Shrink the snake by removing the last body segment (tail)
+    if (body.length > 0) {
+        body.pop(); // Remove the last segment of the body (tail)
+    }
+
+    // Show a visual effect when colliding with the rock
+    showRockEffect(x, y);
+}
+
+// Function to remove the rock from the grid
+function removeRock(x, y) {
+    // Find the rock in the grid and remove it
+    const rockIndex = rocks.findIndex(rock => rock.x === x && rock.y === y);
+    if (rockIndex !== -1) {
+        // Remove from the array
+        rocks.splice(rockIndex, 1);
+
+        // Remove the rock class from the grid cell
+        const rockCell = document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+        if (rockCell) {
+            rockCell.classList.remove('rock');
+        }
+    }
+}
+
+// === Rock Visual Effect ===
+
+// Function to show a collision effect when hitting a rock
+function showRockEffect(x, y) {
+    const cellSize = 50;
+    const rockEffectSize = cellSize * 2;
+
+    // Set the position of the effect based on the rock's coordinates
+    bloodEffect.style.left = `${x * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
+    bloodEffect.style.top = `${y * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
+    bloodEffect.style.display = 'block';
+    bloodEffect.style.opacity = '1';
+
+    setTimeout(() => {
+        bloodEffect.style.opacity = '0';
+    }, 1000);
+
+    setTimeout(() => {
+        bloodEffect.style.display = 'none';
+    }, 2000);
+}
+
+// === Initial Setup ===
+placeRocks();  // Place 20 rocks initially
 
 // === Input Handling ===
 
@@ -346,6 +513,31 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
+window.addEventListener('keydown', (event) => {
+    const now = Date.now(); // Get current timestamp
+
+    // Only allow direction change if 200ms have passed since the last move
+    if (now - lastMoveTime < moveCooldown) {
+        return; // Ignore the keypress if cooldown hasn't finished
+    }
+
+    // Prevent snake from reversing into itself and handle direction change
+    if (event.key === 'ArrowUp' && direction !== 'ArrowDown') {
+        direction = 'ArrowUp';
+        lastMoveTime = now; // Update the last move time
+    } else if (event.key === 'ArrowDown' && direction !== 'ArrowUp') {
+        direction = 'ArrowDown';
+        lastMoveTime = now;
+    } else if (event.key === 'ArrowLeft' && direction !== 'ArrowRight') {
+        direction = 'ArrowLeft';
+        lastMoveTime = now;
+    } else if (event.key === 'ArrowRight' && direction !== 'ArrowLeft') {
+        direction = 'ArrowRight';
+        lastMoveTime = now;
+    }
+});
+
+
 // === Game Loops ===
 
 // Game loop to move the snake every 200 milliseconds
@@ -361,5 +553,5 @@ setInterval(() => {
 // === Initial Setup ===
 updateHead();
 placeFood();
-placeCacti();  // Place 35 cacti initially
+placeCacti();  // Place 20 cacti initially
 updateScore();
