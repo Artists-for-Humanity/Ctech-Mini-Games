@@ -8,20 +8,24 @@ let summerHeight = 350;
 let summerX = 0;
 let summerY = 0;
 let summerImg;
-let summerScrollSpeed = 6; // Speed of background scroll // {NM: changed to 6 to make a little faster? felt really slow but that migth be because of the dinosaur having no run animation? not sureeee}
+let summerScrollSpeed = 6;
 
 let cactusArray = [];
 
 let cactus1Width = 34;
 let cactus2Width = 69;
 let cactus3Width = 102;
-let cactusHeight = 70; // Defined height for cactus
+let cactusHeight = 70;
 
 let cactus1Img;
 let cactus2Img;
 let cactus3Img;
 
-// Dino properties
+let powerup1;
+let powerup1Width = 30;
+let powerup1Height = 40;
+let powerup1Img;
+
 let dinoWidth = 88;
 let dinoHeight = 94;
 let dinoX = 50;
@@ -33,7 +37,7 @@ let dino = {
   y: dinoY,
   width: dinoWidth,
   height: dinoHeight,
-  gravity: 0.3, // Adjusted gravity for a better fall speed // {NM: changed to 0.3 to add more bounce :)}
+  gravity: 0.3,
   velocityY: 0,
   isJumping: false,
 };
@@ -65,13 +69,11 @@ window.onload = function () {
     context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
   };
 
-  // Start the game loop
   update();
 };
 
-// Function to generate a random cactus type
 function generateCactus() {
-  let cactusType = Math.floor(Math.random() * 3) + 1; // Randomly choose between 1, 2, or 3
+  let cactusType = Math.floor(Math.random() * 3) + 1;
   let cactusWidth =
     cactusType === 1
       ? cactus1Width
@@ -101,7 +103,9 @@ function checkCollision() {
       dino.y + dino.height > cactus.y
     ) {
       // Game Over logic
-      alert("Game Over! :(");            
+      alert("Game Over! :(");
+      //reset the dino position
+      update();
       location.reload(); // Reload the page to restart the game
     }
   }
@@ -137,13 +141,12 @@ function update() {
     }
   }
 
-  
   // Generate new cactus at random intervals
   if (Math.random() < 0.01) {
     generateCactus();
   }
 
-  // Move the cacti 
+  // Move the cacti
   for (let cactus of cactusArray) {
     cactus.x -= 3; // Move cactus to the left
   }
@@ -151,7 +154,6 @@ function update() {
   // Remove cacti that have gone off-screen
   cactusArray = cactusArray.filter((cactus) => cactus.x + cactus.width > 0);
 
-  
   // Check for collisions
   checkCollision();
 
@@ -189,3 +191,4 @@ document.addEventListener("keydown", (e) => {
     jump();
   }
 });
+//On collision logic (power ups)
