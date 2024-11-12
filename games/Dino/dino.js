@@ -8,7 +8,7 @@ let summerHeight = 350;
 let summerX = 0;
 let summerY = 0;
 let summerImg;
-let summerScrollSpeed = 2; // Speed of background scroll
+let summerScrollSpeed = 6; // Speed of background scroll // {NM: changed to 6 to make a little faster? felt really slow but that migth be because of the dinosaur having no run animation? not sureeee}
 
 let cactusArray = [];
 
@@ -33,7 +33,7 @@ let dino = {
   y: dinoY,
   width: dinoWidth,
   height: dinoHeight,
-  gravity: 0.6, // Adjusted gravity for a better fall speed
+  gravity: 0.3, // Adjusted gravity for a better fall speed // {NM: changed to 0.3 to add more bounce :)}
   velocityY: 0,
   isJumping: false,
 };
@@ -101,7 +101,7 @@ function checkCollision() {
       dino.y + dino.height > cactus.y
     ) {
       // Game Over logic
-      alert("Game Over!");
+      alert("Game Over! :(");            
       location.reload(); // Reload the page to restart the game
     }
   }
@@ -137,12 +137,13 @@ function update() {
     }
   }
 
+  
   // Generate new cactus at random intervals
   if (Math.random() < 0.01) {
     generateCactus();
   }
 
-  // Move the cacti
+  // Move the cacti 
   for (let cactus of cactusArray) {
     cactus.x -= 3; // Move cactus to the left
   }
@@ -150,6 +151,7 @@ function update() {
   // Remove cacti that have gone off-screen
   cactusArray = cactusArray.filter((cactus) => cactus.x + cactus.width > 0);
 
+  
   // Check for collisions
   checkCollision();
 
