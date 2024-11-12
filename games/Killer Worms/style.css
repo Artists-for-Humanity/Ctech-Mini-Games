@@ -69,6 +69,17 @@ container_board {
 
 .food {
     background-image: url('z.Human.png');
+    background-size: cover;
+}
+
+.food2 {
+    background-image: url('z.Human2.png')
+    background-size: cover;
+}
+
+.food3 {
+    background-image: url(]z.Human3.png)
+    background-size: cover;
 }
 
 .cell.cactus {

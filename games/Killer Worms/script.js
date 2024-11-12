@@ -21,8 +21,6 @@ let canChangeDirection = true;  // Flag to track if direction change is allowed
 let nextDirection = null;  // Store the next direction to move after the delay
 const directionCooldown = 1;  // Cooldown time in milliseconds (200ms)
 
-
-
 function startCooldown() {
     canChangeDirection = false; // Block further direction changes
     setTimeout(() => {
@@ -106,29 +104,45 @@ function clearFood() {
     }
 }
 
-// Function to move food in the direction of the snake
+// Function to move food randomly to a neighboring spot, avoiding obstacles
 function moveFood() {
     clearFood(); // Clear the current food position
 
-    // Move food in the direction of the snake
-    switch (direction) {
-        case 'ArrowUp':
-            if (foodY > 0) foodY--;
-            break;
-        case 'ArrowDown':
-            if (foodY < gridHeight - 1) foodY++;
-            break;
-        case 'ArrowLeft':
-            if (foodX > 0) foodX--;
-            break;
-        case 'ArrowRight':
-            if (foodX < gridWidth - 1) foodX++;
-            break;
+    // Directions to move food: up, down, left, right
+    const directions = [
+        { dx: 0, dy: -1 },  // Up
+        { dx: 0, dy: 1 },   // Down
+        { dx: -1, dy: 0 },  // Left
+        { dx: 1, dy: 0 }    // Right
+    ];
+
+    // Randomly pick a direction from the available directions
+    const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+
+    // Calculate the new position
+    const newFoodX = foodX + randomDirection.dx;
+    const newFoodY = foodY + randomDirection.dy;
+
+    // Ensure the new food position is within bounds of the grid
+    if (newFoodX >= 0 && newFoodX < gridWidth && newFoodY >= 0 && newFoodY < gridHeight) {
+        // Check if the new position is not on the snake's head, body, or any obstacles (cacti, rocks)
+        if (
+            (newFoodX !== headX || newFoodY !== headY) &&  // Avoid the snake head
+            !body.some(segment => segment.x === newFoodX && segment.y === newFoodY) && // Avoid the body
+            !cacti.some(cactus => cactus.x === newFoodX && cactus.y === newFoodY) && // Avoid cacti
+            !rocks.some(rock => rock.x === newFoodX && rock.y === newFoodY) // Avoid rocks
+        ) {
+            // Valid position, so update the food position
+            foodX = newFoodX;
+            foodY = newFoodY;
+        }
     }
 
     // Place food in the new position
     const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
-    foodCell.classList.add('food');
+    if (foodCell) {
+        foodCell.classList.add('food');
+    }
 }
 
 // === Reset Game Function ===
@@ -547,7 +561,7 @@ setInterval(() => {
 // Move food every 800 milliseconds
 setInterval(() => {
     moveFood();
-}, 800);
+}, 1200);
 
 // === Initial Setup ===
 updateHead();
