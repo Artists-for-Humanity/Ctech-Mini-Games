@@ -19,8 +19,8 @@ const barriers = [
     { x: 800, y: 100, width: 50, height: 500, element: createBarrier() },
     { x: 850, y: 550, width: 300, height: 50, element: createBarrier() },
     { x: 1150, y: 400, width: 50, height: 150, element: createBarrier() },
-    { x: 140, y: 800, width: 1100, height: 50, element: createBarrier() },
-    { x: 200, y: 610, width: 50, height: 190, element: createBarrier() }
+    { x: 0, y: 820, width: 1250, height: 40, element: createBarrier() },
+    { x: 200, y: 610, width: 50, height: 220, element: createBarrier() }
 ];
 
 // Key press tracking
