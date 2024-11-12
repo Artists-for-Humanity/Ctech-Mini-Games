@@ -1,17 +1,12 @@
 const sprite = document.getElementById('sprite');
 const gameCanvas = document.getElementById('gameCanvas');
-const collisionImage = document.getElementById('collisionImage');
-let collisionTimeout;
-
-let spriteX = 30; // Initial x position of the sprite
-let spriteY = 750; // Initial y position of the sprite
+let spriteX = 30; // Start position of sprite
+let spriteY = 750;
 const spriteWidth = 50;
 const spriteHeight = 50;
 const spriteSpeed = 5;
 
-const initialSpriteX = 30;
-const initialSpriteY = 750;
-
+// Define maze barriers
 const barriers = [
     { x: 0, y: 75, width: 700, height: 50, element: document.getElementById('barrier1') },
     { x: 400, y: 125, width: 300, height: 75, element: document.getElementById('barrier2') },
@@ -28,6 +23,7 @@ const barriers = [
     { x: 200, y: 610, width: 50, height: 220, element: createBarrier() }
 ];
 
+// Key press tracking
 const keys = { w: false, a: false, s: false, d: false };
 
 window.addEventListener('keydown', (e) => {
@@ -44,19 +40,20 @@ window.addEventListener('keyup', (e) => {
     if (e.key === 'd') keys.d = false;
 });
 
+// Collision detection for barriers and boundaries
 function checkCollision(x, y) {
     for (let barrier of barriers) {
         if (x < barrier.x + barrier.width &&
             x + spriteWidth > barrier.x &&
             y < barrier.y + barrier.height &&
             y + spriteHeight > barrier.y) {
-            showCollisionImage(); // Display collision image upon collision
-            return true;
+            return true; // Collision with barrier
         }
     }
     return false;
 }
 
+// Update sprite position with boundary and barrier collision checks
 function updateSpritePosition() {
     let newX = spriteX;
     let newY = spriteY;
@@ -75,33 +72,21 @@ function updateSpritePosition() {
     if (!checkCollision(spriteX, newY) && newY >= 0 && newY + spriteHeight <= canvasHeight) {
         spriteY = newY;
     }
+    
 
     sprite.style.left = spriteX + 'px';
     sprite.style.top = spriteY + 'px';
 }
 
-function showCollisionImage() {
-    collisionImage.style.display = 'block';
-    collisionImage.style.width = '100vw';
-    collisionImage.style.height = '100vh';
-    collisionImage.style.position = 'fixed';
-    collisionImage.style.top = 0;
-    collisionImage.style.left = 0;
-
-    clearTimeout(collisionTimeout);
-    collisionTimeout = setTimeout(() => {
-        collisionImage.style.display = 'none';
-        resetSpritePosition(); // Reset sprite position after collision image disappears
-    }, 2000);
+// Function to create and return a new barrier element
+function createBarrier() {
+    const barrier = document.createElement('div');
+    barrier.classList.add('barrier');
+    gameCanvas.appendChild(barrier);
+    return barrier;
 }
 
-function resetSpritePosition() {
-    spriteX = initialSpriteX;
-    spriteY = initialSpriteY;
-    sprite.style.left = spriteX + 'px';
-    sprite.style.top = spriteY + 'px';
-}
-
+// Update barrier visual positions
 function updateBarrierPositions() {
     for (let barrier of barriers) {
         barrier.element.style.left = barrier.x + 'px';
@@ -111,10 +96,12 @@ function updateBarrierPositions() {
     }
 }
 
+// Main game loop
 function gameLoop() {
     updateSpritePosition();
     requestAnimationFrame(gameLoop);
 }
 
+// Initialize barrier positions and start the game loop
 updateBarrierPositions();
 gameLoop();
