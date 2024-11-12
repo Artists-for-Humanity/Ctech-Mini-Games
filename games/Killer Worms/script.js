@@ -17,11 +17,18 @@ let direction = 'ArrowLeft'; // Initial direction
 let score = 0;
 let highScore = 0;
 let cacti = []; // Array to hold cactus positions
-let lastMoveTime = 0; // Track the last time the snake moved
-const moveCooldown = 200; // Cooldown time in milliseconds (200ms)
+let canChangeDirection = true;  // Flag to track if direction change is allowed
+let nextDirection = null;  // Store the next direction to move after the delay
+const directionCooldown = 1;  // Cooldown time in milliseconds (200ms)
 
 
 
+function startCooldown() {
+    canChangeDirection = false; // Block further direction changes
+    setTimeout(() => {
+        canChangeDirection = true; // Allow direction changes after cooldown
+    }, directionCooldown);
+}
 
 // Create the grid and initialize cells
 const grid = document.getElementById('grid');
@@ -193,7 +200,6 @@ function placeRocks() {
     }
 }
 
-
 // === Rock Collision Function ===
 
 // Function to handle collisions with rocks
@@ -223,7 +229,6 @@ function showRockEffect(x, y) {
         bloodEffect.style.display = 'none';
     }, 2000);
 }
-
 
 // Function to handle collisions with rocks
 function handleRockCollision(x, y) {
@@ -362,31 +367,36 @@ function placeCacti() {
 
 // === Game Loop ===
 
-// Modify the game loop to handle rock collision
 function moveSnake() {
+    // If there is a queued direction, update it
+    if (nextDirection) {
+        direction = nextDirection;
+        nextDirection = null;  // Clear the next direction after applying it
+    }
+
     let newX = headX;
     let newY = headY;
 
     // Move the snake based on the current direction
     switch (direction) {
         case 'ArrowUp':
-            if (headY > 0) newY--;
+            newY--;
             break;
         case 'ArrowDown':
-            if (headY < gridHeight - 1) newY++;
+            newY++;
             break;
         case 'ArrowLeft':
-            if (headX > 0) newX--;
+            newX--;
             break;
         case 'ArrowRight':
-            if (headX < gridWidth - 1) newX++;
+            newX++;
             break;
     }
 
-    // Check for wall collisions
+    // Check if the head goes out of bounds (any direction beyond the grid)
     if (newX < 0 || newX >= gridWidth || newY < 0 || newY >= gridHeight) {
-        resetGame(); // Reset if wall collision occurs
-        return;
+        resetGame();  // Reset the game if the head goes out of bounds
+        return;  // Exit the function to prevent further movement
     }
 
     // Check for food collision
@@ -407,13 +417,13 @@ function moveSnake() {
 
     // Check for self-collision
     if (body.slice(0, -1).some(segment => segment.x === newX && segment.y === newY)) {
-        resetGame();
+        resetGame();  // Reset if the snake collides with itself
         return;
     }
 
     // Handle cactus collision
     if (cacti.some(cactus => cactus.x === newX && cactus.y === newY)) {
-        resetGame();
+        resetGame();  // Reset if the snake collides with a cactus
         return;
     }
 
@@ -433,11 +443,19 @@ function moveSnake() {
     headX = newX;
     headY = newY;
 
+    // === New Check: Reset if only the head remains ===
+    if (body.length === 0) {
+        resetGame();  // Reset if there are no body segments (only the head remains)
+        return;  // Exit early as the game is reset
+    }
+
     // Update the body and head
     updateBody();  // Update body first
     updateHead();  // Then update the head last
     updateScore();
 }
+
+
 
 // === Rock Collision Function ===
 
@@ -498,42 +516,23 @@ placeRocks();  // Place 20 rocks initially
 
 // === Input Handling ===
 
-// Handle keydown events to change direction
 window.addEventListener('keydown', (event) => {
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+    // Only process the event if the cooldown is not active
+    if (canChangeDirection && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        // Ensure the snake doesn't reverse into itself
         if (event.key === 'ArrowUp' && direction !== 'ArrowDown') {
-            direction = 'ArrowUp';
+            nextDirection = 'ArrowUp';  // Queue the direction change
+            startCooldown();  // Start cooldown after direction change
         } else if (event.key === 'ArrowDown' && direction !== 'ArrowUp') {
-            direction = 'ArrowDown';
+            nextDirection = 'ArrowDown';  // Queue the direction change
+            startCooldown();  // Start cooldown after direction change
         } else if (event.key === 'ArrowLeft' && direction !== 'ArrowRight') {
-            direction = 'ArrowLeft';
+            nextDirection = 'ArrowLeft';  // Queue the direction change
+            startCooldown();  // Start cooldown after direction change
         } else if (event.key === 'ArrowRight' && direction !== 'ArrowLeft') {
-            direction = 'ArrowRight';
+            nextDirection = 'ArrowRight';  // Queue the direction change
+            startCooldown();  // Start cooldown after direction change
         }
-    }
-});
-
-window.addEventListener('keydown', (event) => {
-    const now = Date.now(); // Get current timestamp
-
-    // Only allow direction change if 200ms have passed since the last move
-    if (now - lastMoveTime < moveCooldown) {
-        return; // Ignore the keypress if cooldown hasn't finished
-    }
-
-    // Prevent snake from reversing into itself and handle direction change
-    if (event.key === 'ArrowUp' && direction !== 'ArrowDown') {
-        direction = 'ArrowUp';
-        lastMoveTime = now; // Update the last move time
-    } else if (event.key === 'ArrowDown' && direction !== 'ArrowUp') {
-        direction = 'ArrowDown';
-        lastMoveTime = now;
-    } else if (event.key === 'ArrowLeft' && direction !== 'ArrowRight') {
-        direction = 'ArrowLeft';
-        lastMoveTime = now;
-    } else if (event.key === 'ArrowRight' && direction !== 'ArrowLeft') {
-        direction = 'ArrowRight';
-        lastMoveTime = now;
     }
 });
 
