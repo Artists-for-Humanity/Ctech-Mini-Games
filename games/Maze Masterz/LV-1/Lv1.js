@@ -18,14 +18,19 @@ const barriers = [
     { x: 400, y: 125, width: 300, height: 75, element: document.getElementById('barrier2') },
     
     // New maze barriers added dynamically
-    { x: 0, y: 300, width: 200, height: 50, element: createBarrier() },
-    { x: 250, y: 200, width: 50, height: 250, element: createBarrier() },
+    { x: 0, y: 380, width: 180, height: 50, element: createBarrier() },
+    { x: 250, y: 200, width: 50, height: 230, element: createBarrier() },
     { x: 100, y: 500, width: 500, height: 40, element: createBarrier() },
-    { x: 650, y: 300, width: 50, height: 300, element: createBarrier() },
+    { x: 670, y: 300, width: 60, height: 300, element: createBarrier() },
     { x: 800, y: 100, width: 50, height: 500, element: createBarrier() },
     { x: 850, y: 550, width: 300, height: 50, element: createBarrier() },
     { x: 1150, y: 400, width: 50, height: 150, element: createBarrier() },
     { x: 0, y: 820, width: 1250, height: 40, element: createBarrier() },
+    { x: 0, y: 0, width: 10, height: 850, element: createBarrier() },
+    { x: 0, y: 0, width: 1280, height: 10, element: createBarrier() },
+    { x: 1230, y: 0, width: 10, height:850, element: createBarrier() },
+    { x: 100, y: 200, width: 150, height:50, element: createBarrier() },
+    { x: 370, y: 380, width: 300, height:50, element: createBarrier() },
     { x: 200, y: 610, width: 50, height: 220, element: createBarrier() }
 ];
 
