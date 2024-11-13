@@ -73,11 +73,19 @@ function updateSpritePosition() {
     const canvasWidth = gameCanvas.clientWidth;
     const canvasHeight = gameCanvas.clientHeight;
 
+    // Check for collisions with barriers and canvas boundaries
     if (!checkCollision(newX, spriteY) && newX >= 0 && newX + spriteWidth <= canvasWidth) {
         spriteX = newX;
+    } else if (newX < 0 || newX + spriteWidth > canvasWidth) {
+        showCollisionImage(); // Trigger image if hitting left/right boundary
+        return;
     }
+
     if (!checkCollision(spriteX, newY) && newY >= 0 && newY + spriteHeight <= canvasHeight) {
         spriteY = newY;
+    } else if (newY < 0 || newY + spriteHeight > canvasHeight) {
+        showCollisionImage(); // Trigger image if hitting top/bottom boundary
+        return;
     }
 
     sprite.style.left = spriteX + 'px';
