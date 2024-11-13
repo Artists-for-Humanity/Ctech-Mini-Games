@@ -21,6 +21,23 @@ let cactus1Img;
 let cactus2Img;
 let cactus3Img;
 
+let powerup1Array = [];
+
+function generatePowerup1() {
+  let powerup1X = boardWidth;
+  let powerup1Y = boardHeight - powerup1Height;
+
+  let powerup1 = {
+    x: powerup1X,
+    y: powerup1Y,
+    width: powerup1Width,
+    height: powerup1Height,
+    img: powerup1Img,
+  };
+
+  powerup1Array.push(powerup1);
+}
+let powerup1;
 let powerup1Width = 30;
 let powerup1Height = 40;
 let powerup1Img;
@@ -76,6 +93,25 @@ window.onload = function () {
   update();
 };
 
+let powerup1Collected = false;
+
+function checkPowerup1Collision() {
+  for (let powerup1 of powerup1Array) {
+    if (
+      dino.x + dino.width > powerUp.x &&
+      dino.x < powerUp.x + powerUp.width &&
+      dino.y + dino.height > powerUp.y
+    ) {
+      powerup1Array = powerup1Array.filter((item) => item !== powerup1);
+
+      powerup1Collected = true;
+      setTimeout(() => {
+        powerup1Collected = false;
+      }, 3000);
+    }
+  }
+}
+
 function generateCactus() {
   let cactusType = Math.floor(Math.random() * 3) + 1;
   let cactusWidth =
@@ -98,7 +134,6 @@ function generateCactus() {
   cactusArray.push(cactus);
 }
 
-// Function to check for collisions
 function checkCollision() {
   for (let cactus of cactusArray) {
     if (
@@ -106,18 +141,16 @@ function checkCollision() {
       dino.x < cactus.x + cactus.width &&
       dino.y + dino.height > cactus.y
     ) {
-      // Game Over logic
       alert("Game Over! :(");
-      //reset the dino position
-      location.reload(); // Reload the page to restart the game
+
+      location.reload();
     }
   }
 }
 
-// Jumping function
 function jump() {
   if (!dino.isJumping) {
-    dino.velocityY = -12; // Adjust for jump height
+    dino.velocityY = -12;
     dino.isJumping = true;
   }
 }
@@ -125,45 +158,36 @@ function jump() {
 function update() {
   requestAnimationFrame(update);
 
-  // Update summer background position for scrolling effect
   summerX -= summerScrollSpeed;
   if (summerX <= -summerWidth) {
-    summerX = 0; // Reset to start position
+    summerX = 0;
   }
 
-  // Update Dino's position
   if (dino.isJumping) {
-    dino.velocityY += dino.gravity; // Apply gravity
+    dino.velocityY += dino.gravity;
     dino.y += dino.velocityY;
 
-    // Check if Dino lands
     if (dino.y >= boardHeight - dinoHeight) {
-      dino.y = boardHeight - dinoHeight; // Reset to ground level
+      dino.y = boardHeight - dinoHeight;
       dino.isJumping = false;
       dino.velocityY = 0;
     }
   }
 
-  // Generate new cactus at random intervals
   if (Math.random() < 0.01) {
     generateCactus();
   }
 
-  // Move the cacti
   for (let cactus of cactusArray) {
-    cactus.x -= 3; // Move cactus to the left
+    cactus.x -= 3;
   }
 
-  // Remove cacti that have gone off-screen
   cactusArray = cactusArray.filter((cactus) => cactus.x + cactus.width > 0);
 
-  // Check for collisions
   checkCollision();
 
-  // Clear the canvas
   context.clearRect(0, 0, boardWidth, boardHeight);
 
-  // Draw the scrolling background
   context.drawImage(summerImg, summerX, summerY, summerWidth, summerHeight);
   context.drawImage(
     summerImg,
@@ -171,9 +195,8 @@ function update() {
     summerY,
     summerWidth,
     summerHeight
-  ); // Draw a second image to create a seamless effect
+  );
 
-  // Draw cacti
   for (let cactus of cactusArray) {
     context.drawImage(
       cactus.img,
@@ -184,14 +207,11 @@ function update() {
     );
   }
 
-  // Draw the Dino
   context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
 }
 
-// Event listener for keydown events
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
     jump();
   }
 });
-//On collision logic (power ups)
