@@ -21,18 +21,26 @@ body {
     position: absolute;
 }
 
-.barrier0 {
-    position: absolute;
-    background-color: rgb(27, 195, 32);
-}
-
-
 .barrier {
     position: absolute;
-    background-color: rgb(0, 0, 0);
+    background-color: black;
 }
 
 #collisionImage {
-    display: none; /* Hidden by default */
+    display: none;
     z-index: 10;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+#winPanel {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255)
 }
