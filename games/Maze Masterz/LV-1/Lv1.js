@@ -25,13 +25,15 @@ const barriers = [
     { x: 800, y: 100, width: 50, height: 500, element: createBarrier() },
     { x: 850, y: 550, width: 300, height: 50, element: createBarrier() },
     { x: 1150, y: 400, width: 50, height: 150, element: createBarrier() },
+    { x: 1200, y: 0, width: 50, height:50 , element: document.getElementById('barrier3') },
     { x: 0, y: 820, width: 1250, height: 40, element: createBarrier() },
     { x: 0, y: 0, width: 10, height: 850, element: createBarrier() },
     { x: 0, y: 0, width: 1280, height: 10, element: createBarrier() },
-    { x: 1230, y: 0, width: 10, height:850, element: createBarrier() },
+    
     { x: 100, y: 200, width: 150, height:50, element: createBarrier() },
     { x: 370, y: 380, width: 300, height:50, element: createBarrier() },
     { x: 500, y: 500, width: 100, height:150, element: createBarrier() },
+
     { x: 200, y: 610, width: 50, height: 220, element: createBarrier() }
 ];
 
