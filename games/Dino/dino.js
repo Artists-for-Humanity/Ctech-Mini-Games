@@ -105,7 +105,6 @@ function checkCollision() {
       // Game Over logic
       alert("Game Over! :(");
       //reset the dino position
-      update();
       location.reload(); // Reload the page to restart the game
     }
   }
