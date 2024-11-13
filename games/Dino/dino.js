@@ -21,10 +21,11 @@ let cactus1Img;
 let cactus2Img;
 let cactus3Img;
 
-let powerup1;
 let powerup1Width = 30;
 let powerup1Height = 40;
 let powerup1Img;
+let powerup1X = 50;
+let powerup1Y = boardheight - powerup1Height;
 
 let dinoWidth = 88;
 let dinoHeight = 94;
@@ -67,6 +68,9 @@ window.onload = function () {
   dinoImg.src = "./dino assets/dino.png";
   dinoImg.onload = function () {
     context.drawImage(dinoImg, dino.x, dino.y, dino.width, dino.height);
+
+    powerup1Img = new Image();
+    powerup1Img.src = "./dino assets/powerup1.png";
   };
 
   update();
