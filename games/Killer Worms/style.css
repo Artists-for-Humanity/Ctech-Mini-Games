@@ -74,12 +74,12 @@ container_board {
 
 .food2 {
     background-image: url('z.Human2.png')
-    background-size: cover;
+    
 }
 
 .food3 {
     background-image: url(]z.Human3.png)
-    background-size: cover;
+    
 }
 
 .cell.cactus {
@@ -118,15 +118,6 @@ container_board {
     opacity: 1; /* Fully visible */
     transition: opacity 3s; /* Fade out transition */
     display: none; /* Initially hidden */
-}
-
-
-
-.rotate-up,
-.rotate-down,
-.rotate-left,
-.rotate-right {
-    /* Remove these styles as they are now handled in JavaScript */
 }
 
 .rotate-vertical {
