@@ -148,6 +148,7 @@ function moveFood() {
 // === Reset Game Function ===
 
 // Function to reset the game
+// Function to reset the game
 function resetGame() {
     // Clear all head classes from previous positions
     const allHeadCells = document.querySelectorAll('.cell.head, .cell.rotate-up, .cell.rotate-down, .cell.rotate-left, .cell.rotate-right');
@@ -161,12 +162,16 @@ function resetGame() {
         cell.classList.remove('cactus');
     });
 
-    // Clear all rocks
-    const allRockCells = document.querySelectorAll('.cell.rock');
-    allRockCells.forEach(cell => {
-        cell.classList.remove('rock');
+    // Remove all rocks from the grid
+    rocks.forEach(rock => {
+        const rockCell = document.querySelector(`.cell[data-x="${rock.x}"][data-y="${rock.y}"]`);
+        if (rockCell) {
+            rockCell.classList.remove('rock1', 'rock2', 'rock3'); // Remove all rock classes
+        }
     });
+    rocks = []; // Clear the rocks array
 
+    // Reset snake position
     headX = gridWidth - 1; // Reset to start at the far right
     headY = 0; // Reset to start at the top
     body = [
@@ -178,19 +183,27 @@ function resetGame() {
     turns = []; // Reset turns
     direction = 'ArrowLeft'; // Reset direction
     score = 0;
+
+    // Clear and re-place food
     clearFood();
-    placeFood(); // Place food initially
-    placeCacti();  // Place 25 cacti initially
-    placeRocks();  // Place 20 rocks initially
+    placeFood();
+
+    // Re-place cacti and rocks
+    placeCacti();
+    placeRocks();
+
+    // Update visuals
     updateHead();
     updateBody();
     updateScore();
 }
 
 
+
 // === Place Rocks ===
 
 // Function to place 20 rocks randomly on the grid
+// Function to place rocks randomly
 function placeRocks() {
     rocks = []; // Reset the rocks array
 
@@ -209,18 +222,25 @@ function placeRocks() {
         rocks.push({ x: rockX, y: rockY });
         const rockCell = document.querySelector(`.cell[data-x="${rockX}"][data-y="${rockY}"]`);
         if (rockCell) {
-            rockCell.classList.add('rock');
+            // Randomly assign one of the rock classes
+            const rockClasses = ['rock1', 'rock2', 'rock3'];
+            const randomRockClass = rockClasses[Math.floor(Math.random() * rockClasses.length)];
+            rockCell.classList.add(randomRockClass);
         }
     }
 }
 
+
 // === Rock Collision Function ===
 
 // Function to handle collisions with rocks
+// Example: Remove a rock when the snake collides with it
 function handleRockCollision(x, y) {
-    // Add a visual effect to show the collision with a rock
-    showRockEffect(x, y);
+    console.log(`Snake hit a rock at (${x}, ${y})`);
+    removeRock(x, y); // Remove the rock
+    // You can add additional logic here, such as shrinking the snake
 }
+
 
 // === Rock Visual Effect ===
 
@@ -488,20 +508,25 @@ function handleRockCollision(x, y) {
 }
 
 // Function to remove the rock from the grid
+// Function to remove a rock from the grid
 function removeRock(x, y) {
-    // Find the rock in the grid and remove it
+    // Find the index of the rock in the rocks array
     const rockIndex = rocks.findIndex(rock => rock.x === x && rock.y === y);
+
     if (rockIndex !== -1) {
-        // Remove from the array
+        // Remove the rock from the array
         rocks.splice(rockIndex, 1);
 
-        // Remove the rock class from the grid cell
+        // Get the cell for the rock
         const rockCell = document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+
         if (rockCell) {
-            rockCell.classList.remove('rock');
+            // Remove all potential rock classes (rock1, rock2, rock3)
+            rockCell.classList.remove('rock1', 'rock2', 'rock3');
         }
     }
 }
+
 
 // === Rock Visual Effect ===
 

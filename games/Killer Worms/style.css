@@ -67,28 +67,36 @@ container_board {
     background-image: url('./SW-BoardA.png');
 }
 
-.food {
+.cell.food1 {
     background-image: url('z.Human.png');
     background-size: cover;
 }
 
-.food2 {
-    background-image: url('z.Human2.png')
+.cell.food2 {
+    background-image: url('z.Human2.png');
     
 }
 
-.food3 {
-    background-image: url(]z.Human3.png)
+.cell.food3 {
+    background-image: url('z.Human3.png');
     
 }
 
 .cell.cactus {
-    background-image: url('z.Cactus.png')
+    background-image: url('z.Cactus.png');
 }
 
 /* Style the rocks to fit a 2x2 grid space */
-.cell.rock {
-    background-image: url('z.Rock.png')
+.cell.rock1 {
+    background-image: url('z.Rock1.png');
+}
+
+.cell.rock2 {
+    background-image: url('z.Rock2.png');
+}
+
+.cell.rock3 {
+    background-image: url('z.Rock3.png');
 }
 
 
