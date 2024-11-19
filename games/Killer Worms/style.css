@@ -67,22 +67,22 @@ container_board {
     background-image: url('./SW-BoardA.png');
 }
 
-.cell.food1 {
+.food {
     background-image: url('z.Human.png');
     background-size: cover;
 }
 
-.cell.food2 {
+.food2 {
     background-image: url('z.Human2.png');
     
 }
 
-.cell.food3 {
+.food3 {
     background-image: url('z.Human3.png');
     
 }
 
-.cell.cactus {
+.cactus {
     background-image: url('z.Cactus.png');
 }
 
