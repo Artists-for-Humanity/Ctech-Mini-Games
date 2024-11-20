@@ -1,10 +1,13 @@
+// DOM elements
 const sprite = document.getElementById('sprite');
 const gameCanvas = document.getElementById('gameCanvas');
 const collisionImage = document.getElementById('collisionImage');
 const winPanel = document.getElementById('winPanel');
 const resetButton = document.getElementById('resetButton');
+const winAreaElement = document.getElementById('winArea');
 let collisionTimeout;
 
+// Sprite properties
 let spriteX = 30;
 let spriteY = 750;
 const spriteWidth = 50;
@@ -25,7 +28,6 @@ const barriers = [
     { x: 800, y: 100, width: 50, height: 500, element: createBarrier() },
     { x: 850, y: 550, width: 300, height: 50, element: createBarrier() },
     { x: 1150, y: 400, width: 50, height: 150, element: createBarrier() },
-    { x: 1200, y: 0, width: 40, height: 50, element: document.getElementById('barrier3') },
     { x: 0, y: 820, width: 1250, height: 40, element: createBarrier() },
     { x: 0, y: 0, width: 10, height: 850, element: createBarrier() },
     { x: 0, y: 0, width: 1280, height: 10, element: createBarrier() },
@@ -36,7 +38,7 @@ const barriers = [
 ];
 
 // Win area (target destination coordinates)
-const winArea = { x: 1150, y: 50, width: 50, height: 50 };
+const winArea = { x: 1190, y: 10, width: 50, height: 50 };
 
 // Key press tracking
 const keys = { w: false, a: false, s: false, d: false };
@@ -55,6 +57,14 @@ window.addEventListener('keyup', (e) => {
     if (e.key === 'd') keys.d = false;
 });
 
+// Function to create and return a new barrier element
+function createBarrier() {
+    const barrier = document.createElement('div');
+    barrier.classList.add('barrier');
+    gameCanvas.appendChild(barrier);
+    return barrier;
+}
+
 // Check for win condition
 function checkWin() {
     return (
@@ -68,17 +78,19 @@ function checkWin() {
 // Collision detection for barriers
 function checkCollision(x, y) {
     for (let barrier of barriers) {
-        if (x < barrier.x + barrier.width &&
+        if (
+            x < barrier.x + barrier.width &&
             x + spriteWidth > barrier.x &&
             y < barrier.y + barrier.height &&
-            y + spriteHeight > barrier.y) {
+            y + spriteHeight > barrier.y
+        ) {
             return true;
         }
     }
     return false;
 }
 
-// Update sprite position with boundary and barrier collision checks
+// Update sprite position with collision checks
 function updateSpritePosition() {
     let newX = spriteX;
     let newY = spriteY;
@@ -91,7 +103,6 @@ function updateSpritePosition() {
     const canvasWidth = gameCanvas.clientWidth;
     const canvasHeight = gameCanvas.clientHeight;
 
-    // Check for collisions with barriers and canvas boundaries
     if (checkCollision(newX, spriteY) || newX < 0 || newX + spriteWidth > canvasWidth) {
         showCollisionImage();
         return;
@@ -115,15 +126,7 @@ function updateSpritePosition() {
     }
 }
 
-// Function to create and return a new barrier element
-function createBarrier() {
-    const barrier = document.createElement('div');
-    barrier.classList.add('barrier');
-    gameCanvas.appendChild(barrier);
-    return barrier;
-}
-
-// Show the collision image and reset the sprite after 2 seconds
+// Show collision image and reset sprite position
 function showCollisionImage() {
     collisionImage.style.display = 'block';
     clearTimeout(collisionTimeout);
@@ -138,7 +141,7 @@ function showWinPanel() {
     winPanel.style.display = 'flex';
 }
 
-// Reset the sprite to the starting position
+// Reset sprite position
 function resetSpritePosition() {
     spriteX = initialSpriteX;
     spriteY = initialSpriteY;
@@ -147,14 +150,18 @@ function resetSpritePosition() {
     winPanel.style.display = 'none';
 }
 
-// Update barrier visual positions
-function updateBarrierPositions() {
+// Update barrier and win area positions
+function updatePositions() {
     for (let barrier of barriers) {
         barrier.element.style.left = barrier.x + 'px';
         barrier.element.style.top = barrier.y + 'px';
         barrier.element.style.width = barrier.width + 'px';
         barrier.element.style.height = barrier.height + 'px';
     }
+    winAreaElement.style.left = winArea.x + 'px';
+    winAreaElement.style.top = winArea.y + 'px';
+    winAreaElement.style.width = winArea.width + 'px';
+    winAreaElement.style.height = winArea.height + 'px';
 }
 
 // Main game loop
@@ -163,8 +170,8 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Initialize barrier positions and start the game loop
-updateBarrierPositions();
+// Initialize
+updatePositions();
 gameLoop();
 
 // Restart game on reset button click

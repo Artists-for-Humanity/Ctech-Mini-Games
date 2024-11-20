@@ -1,10 +1,13 @@
+/* Game Canvas */
 #gameCanvas {
     width: 1240px;
     height: 824px;
     border: 40px solid black;
     position: relative;
+    overflow: hidden;
 }
 
+/* Body */
 body {
     margin: 0;
     display: flex;
@@ -14,6 +17,7 @@ body {
     background-color: #f0f0f0;
 }
 
+/* Sprite */
 .sprite {
     width: 50px;
     height: 50px;
@@ -21,11 +25,13 @@ body {
     position: absolute;
 }
 
+/* Barrier */
 .barrier {
     position: absolute;
     background-color: black;
 }
 
+/* Collision Image */
 #collisionImage {
     display: none;
     z-index: 10;
@@ -36,11 +42,23 @@ body {
     left: 0;
 }
 
+/* Win Panel */
 #winPanel {
     display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(255, 255)
+    background-color: chartreuse;
+    padding: 20px;
+    border: 5px solid black;
+    text-align: center;
+}
+
+/* Green Win Area */
+#winArea {
+    position: absolute;
+    background-color: green;
+    opacity: 0.5; /* Semi-transparent */
+    z-index: 5;
 }
