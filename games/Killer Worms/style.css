@@ -1,32 +1,55 @@
-body{
+body {
     height: 100vh;
     margin: 0;
     background-color: rgb(207, 163, 106);
-}
-
-body {
     background-image: url('z.BG.png');
-    background-size: cover; /* Ensures the image covers the entire screen */
-    background-position: center center; /* Centers the image */
-    background-attachment: fixed; /* Keeps the image fixed while scrolling (optional) */
-    height: 100vh; /* Makes the body take the full viewport height */
-    margin: 0; /* Removes any default margin */
+    background-size: cover; /* Ensure the image covers the entire screen */
+    background-position: center center; /* Center the image */
+    background-attachment: fixed; /* Keeps the image fixed while scrolling */
+}
+
+#score-container {
+    display: flex; /* Align score and high score sections horizontally */
+    gap: 20px; /* Add space between the score and high score sections */
+    align-items: center; /* Align sections vertically */
+}
+
+/* Styles for individual sections */
+#score-section, #high-score-section {
+    display: flex; /* Align icon and text horizontally within each section */
+    align-items: center; /* Center icon and text vertically */
+    gap: 10px; /* Space between icon and text */
+}
+
+/* Styles for icons */
+#score-icon, #high-score-icon {
+    width: 60px;
+    height: 60px;
+    background-size: cover; /* Ensure image fills the icon area */
+    background-position: center;
+}
+
+/* Background images for icons */
+#score-icon {
+    background-image: url('z.Dead.png');
+}
+
+#high-score-icon {
+    background-image: url('z.Trophy.png');
+}
+
+/* Styles for text */
+#score, #high-score {
+    font-size: 30px; /* Adjust text size */
+    color: #672e0d; /* Match your theme */
 }
 
 
-
-container_scores {
+.container-board {
     display: flex;
-    align-items: center;
-    justify-content: left;
-    margin: 0;
-}
-
-container_board {
-    display: flex;
-    align-items: center;
     justify-content: center;
-   
+    align-items: center;
+    height: 100vh;
 }
 
 #grid {
@@ -35,6 +58,7 @@ container_board {
     grid-template-rows: repeat(16, 50px);
     position: relative; /* Make sure the grid is relative */
 }
+
 .cell {
     width: 50px;
     height: 50px;
@@ -45,7 +69,7 @@ container_board {
     font-size: 14px;
 }
 
-
+/* Game styles remain unchanged */
 #game-board {
     border-radius: 100px;
     display: grid;
@@ -59,12 +83,15 @@ container_board {
     border-radius: 0px;
     height: 800px;
     width: 1500px;
-
-    
-}   
+    display: grid;
+    margin: auto
+}
 
 .grid {
     background-image: url('./SW-BoardA.png');
+    grid-template-columns: repeat(30, 50px);
+    grid-template-rows: repeat(16, 50px);
+    position: relative;
 }
 
 .food {
@@ -86,7 +113,6 @@ container_board {
     background-image: url('z.Cactus.png');
 }
 
-/* Style the rocks to fit a 2x2 grid space */
 .cell.rock1 {
     background-image: url('z.Rock1.png');
 }
