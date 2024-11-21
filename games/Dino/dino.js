@@ -13,7 +13,7 @@ let cactusArray = [],
 
 // Dino settings
 const dino = {
-  x: 50,
+  x: 45,
   y: boardHeight - 94,
   width: 88,
   height: 94,
@@ -24,7 +24,7 @@ const dino = {
 
 // Cactus settings
 const cactusSettings = [
-  { width: 34, img: null },
+  { width: 24, img: null },
   // { width: 69, img: null },
   // { width: 102, img: null },
 ];
@@ -138,9 +138,9 @@ function generateCactus() {
   const { width, img } = cactusSettings[cactusType];
   cactusArray.push({
     x: boardWidth,
-    y: boardHeight - 70,
+    y: boardHeight - 74,
     width,
-    height: 70,
+    height: 60,
     img,
   });
 }
@@ -162,7 +162,7 @@ function checkCollisions() {
 // Jump function for dino
 function jump() {
   if (!dino.isJumping) {
-    dino.velocityY = -12;
+    dino.velocityY = -10;
     dino.isJumping = true;
   }
 }
