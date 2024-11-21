@@ -5,7 +5,7 @@ const gridHeight = 16;
 // Initial game state
 let headX = gridWidth - 1; // Start at the far right
 let headY = 0; // Start at the top
-let foodX, foodY;
+let foodX, foodY, food1X, food1Y, food2X, food2Y; 
 let body = [
     { x: headX, y: headY, direction: 'ArrowLeft' },
     { x: headX + 1, y: headY, direction: 'ArrowLeft' },
@@ -89,26 +89,80 @@ function getRotation(direction, flip) {
 // === Game State Functions ===
 
 // Function to place food at the initial position
-function placeFood() {
-    foodX = Math.floor(Math.random() * gridWidth);
-    foodY = Math.floor(Math.random() * gridHeight);
-    const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
-    foodCell.classList.add('food');
-}
+function placeFood(type) {
+    let foodXToPlace, foodYToPlace, foodClass;
 
-// Function to clear food from the grid
-function clearFood() {
-    const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
+    if (type === 'food') {
+        foodClass = 'food';
+    } else if (type === 'food1') {
+        foodClass = 'food1';
+    } else if (type === 'food2') {
+        foodClass = 'food2';
+    } else {
+        console.error(`Unknown food type: ${type}`);
+        return;
+    }
+
+    // Ensure the new position doesn't overlap with snake, obstacles, or other foods
+    do {
+        foodXToPlace = Math.floor(Math.random() * gridWidth);
+        foodYToPlace = Math.floor(Math.random() * gridHeight);
+    } while (
+        body.some(segment => segment.x === foodXToPlace && segment.y === foodYToPlace) || // Avoid snake body
+        cacti.some(cactus => cactus.x === foodXToPlace && cactus.y === foodYToPlace) ||  // Avoid cacti
+        rocks.some(rock => rock.x === foodXToPlace && rock.y === foodYToPlace) ||        // Avoid rocks
+        (type !== 'food' && foodXToPlace === foodX && foodYToPlace === foodY) ||        // Avoid main food
+        (type !== 'food1' && foodXToPlace === food1X && foodYToPlace === food1Y) ||     // Avoid food1
+        (type !== 'food2' && foodXToPlace === food2X && foodYToPlace === food2Y)        // Avoid food2
+    );
+
+    // Assign the new position to the correct food variable
+    if (type === 'food') {
+        foodX = foodXToPlace;
+        foodY = foodYToPlace;
+    } else if (type === 'food1') {
+        food1X = foodXToPlace;
+        food1Y = foodYToPlace;
+    } else if (type === 'food2') {
+        food2X = foodXToPlace;
+        food2Y = foodYToPlace;
+    }
+
+    // Place the food on the grid
+    const foodCell = document.querySelector(`.cell[data-x="${foodXToPlace}"][data-y="${foodYToPlace}"]`);
     if (foodCell) {
-        foodCell.classList.remove('food');
+        foodCell.classList.add(foodClass);
+    } else {
+        console.error(`Failed to place ${foodClass} at (${foodXToPlace}, ${foodYToPlace})`);
     }
 }
 
-// Function to move food randomly to a neighboring spot, avoiding obstacles
-function moveFood() {
-    clearFood(); // Clear the current food position
 
-    // Directions to move food: up, down, left, right
+
+
+
+// Function to clear food from the grid
+function clearFood(type) {
+    if (type === 'food') {
+        const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
+        if (foodCell) foodCell.classList.remove('food');
+    } else if (type === 'food1') {
+        const food1Cell = document.querySelector(`.cell[data-x="${food1X}"][data-y="${food1Y}"]`);
+        if (food1Cell) food1Cell.classList.remove('food1');
+    } else if (type === 'food2') {
+        const food2Cell = document.querySelector(`.cell[data-x="${food2X}"][data-y="${food2Y}"]`);
+        if (food2Cell) food2Cell.classList.remove('food2');
+    }
+}
+
+
+
+
+// Function to move food randomly to a neighboring spot, avoiding obstacles
+// Move main food (food)
+function moveFood() {
+    clearFood('food'); // Clear the main food
+
     const directions = [
         { dx: 0, dy: -1 },  // Up
         { dx: 0, dy: 1 },   // Down
@@ -116,34 +170,93 @@ function moveFood() {
         { dx: 1, dy: 0 }    // Right
     ];
 
-    // Randomly pick a direction from the available directions
     const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+    const newX = foodX + randomDirection.dx;
+    const newY = foodY + randomDirection.dy;
 
-    // Calculate the new position
-    const newFoodX = foodX + randomDirection.dx;
-    const newFoodY = foodY + randomDirection.dy;
-
-    // Ensure the new food position is within bounds of the grid
-    if (newFoodX >= 0 && newFoodX < gridWidth && newFoodY >= 0 && newFoodY < gridHeight) {
-        // Check if the new position is not on the snake's head, body, or any obstacles (cacti, rocks)
-        if (
-            (newFoodX !== headX || newFoodY !== headY) &&  // Avoid the snake head
-            !body.some(segment => segment.x === newFoodX && segment.y === newFoodY) && // Avoid the body
-            !cacti.some(cactus => cactus.x === newFoodX && cactus.y === newFoodY) && // Avoid cacti
-            !rocks.some(rock => rock.x === newFoodX && rock.y === newFoodY) // Avoid rocks
-        ) {
-            // Valid position, so update the food position
-            foodX = newFoodX;
-            foodY = newFoodY;
-        }
+    if (
+        newX >= 0 && newX < gridWidth &&
+        newY >= 0 && newY < gridHeight &&
+        !body.some(segment => segment.x === newX && segment.y === newY) && // Avoid snake body
+        !cacti.some(cactus => cactus.x === newX && cactus.y === newY) &&   // Avoid cacti
+        !rocks.some(rock => rock.x === newX && rock.y === newY) &&         // Avoid rocks
+        !(newX === food1X && newY === food1Y) &&                          // Avoid food1
+        !(newX === food2X && newY === food2Y)                             // Avoid food2
+    ) {
+        foodX = newX;
+        foodY = newY;
     }
 
-    // Place food in the new position
     const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
-    if (foodCell) {
-        foodCell.classList.add('food');
-    }
+    if (foodCell) foodCell.classList.add('food');
 }
+
+
+// Move second food (food1)
+function moveFood1() {
+    clearFood('food1'); // Clear the second food
+
+    const directions = [
+        { dx: 0, dy: -1 },  // Up
+        { dx: 0, dy: 1 },   // Down
+        { dx: -1, dy: 0 },  // Left
+        { dx: 1, dy: 0 }    // Right
+    ];
+
+    const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+    const newX = food1X + randomDirection.dx;
+    const newY = food1Y + randomDirection.dy;
+
+    if (
+        newX >= 0 && newX < gridWidth &&
+        newY >= 0 && newY < gridHeight &&
+        !body.some(segment => segment.x === newX && segment.y === newY) && // Avoid snake body
+        !cacti.some(cactus => cactus.x === newX && cactus.y === newY) &&   // Avoid cacti
+        !rocks.some(rock => rock.x === newX && rock.y === newY) &&         // Avoid rocks
+        !(newX === foodX && newY === foodY) &&                            // Avoid food
+        !(newX === food2X && newY === food2Y)                             // Avoid food2
+    ) {
+        food1X = newX;
+        food1Y = newY;
+    }
+
+    const food1Cell = document.querySelector(`.cell[data-x="${food1X}"][data-y="${food1Y}"]`);
+    if (food1Cell) food1Cell.classList.add('food1');
+}
+
+
+// Move third food (food2)
+function moveFood2() {
+    clearFood('food2'); // Clear the third food
+
+    const directions = [
+        { dx: 0, dy: -1 },  // Up
+        { dx: 0, dy: 1 },   // Down
+        { dx: -1, dy: 0 },  // Left
+        { dx: 1, dy: 0 }    // Right
+    ];
+
+    const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+    const newX = food2X + randomDirection.dx;
+    const newY = food2Y + randomDirection.dy;
+
+    if (
+        newX >= 0 && newX < gridWidth &&
+        newY >= 0 && newY < gridHeight &&
+        !body.some(segment => segment.x === newX && segment.y === newY) && // Avoid snake body
+        !cacti.some(cactus => cactus.x === newX && cactus.y === newY) &&   // Avoid cacti
+        !rocks.some(rock => rock.x === newX && rock.y === newY) &&         // Avoid rocks
+        !(newX === foodX && newY === foodY) &&                            // Avoid food
+        !(newX === food1X && newY === food1Y)                             // Avoid food1
+    ) {
+        food2X = newX;
+        food2Y = newY;
+    }
+
+    const food2Cell = document.querySelector(`.cell[data-x="${food2X}"][data-y="${food2Y}"]`);
+    if (food2Cell) food2Cell.classList.add('food2');
+}
+
 
 // === Reset Game Function ===
 
@@ -400,92 +513,111 @@ function placeCacti() {
 }
 
 // === Game Loop ===
-
 function moveSnake() {
-    // If there is a queued direction, update it
+    // Handle queued direction changes if any
     if (nextDirection) {
-        direction = nextDirection;
-        nextDirection = null;  // Clear the next direction after applying it
+        direction = nextDirection; // Apply the queued direction
+        nextDirection = null; // Clear the queue
     }
 
+    // Determine the new head position based on the current direction
     let newX = headX;
     let newY = headY;
 
-    // Move the snake based on the current direction
     switch (direction) {
         case 'ArrowUp':
-            newY--;
+            newY--; // Move up
             break;
         case 'ArrowDown':
-            newY++;
+            newY++; // Move down
             break;
         case 'ArrowLeft':
-            newX--;
+            newX--; // Move left
             break;
         case 'ArrowRight':
-            newX++;
+            newX++; // Move right
             break;
     }
 
-    // Check if the head goes out of bounds (any direction beyond the grid)
+    // Check if the new head position is out of bounds
     if (newX < 0 || newX >= gridWidth || newY < 0 || newY >= gridHeight) {
-        resetGame();  // Reset the game if the head goes out of bounds
-        return;  // Exit the function to prevent further movement
+        resetGame(); // Snake hits the wall; reset the game
+        return;
     }
 
-    // Check for food collision
+    // Check if the new head position collides with the snake's body
+    if (body.some(segment => segment.x === newX && segment.y === newY)) {
+        resetGame(); // Snake hits itself; reset the game
+        return;
+    }
+
+    // Handle food collisions
     if (newX === foodX && newY === foodY) {
-        body.push({ x: headX, y: headY, direction });
-        clearFood();
-        placeFood();
-        showBloodEffect(headX, headY);
-        score++;
-        if (score > highScore) {
-            highScore = score;
-        }
+        // Collision with main food
+        body.push({ x: headX, y: headY, direction }); // Add a new segment
+        clearFood('food'); // Clear the eaten food
+        placeFood('food'); // Re-place only the eaten food
+        showBloodEffect(newX, newY); // Trigger blood effect at the head's position
+        score++; // Increase score
+        if (score > highScore) highScore = score; // Update high score
+    } else if (newX === food1X && newY === food1Y) {
+        // Collision with food1
+        body.push({ x: headX, y: headY, direction }); // Add a new segment
+        clearFood('food1'); // Clear the eaten food
+        placeFood('food1'); // Re-place only the eaten food
+        showBloodEffect(newX, newY); // Trigger blood effect at the head's position
+        score += 1.5; // Increase score
+        if (score > highScore) highScore = score; // Update high score
+    } else if (newX === food2X && newY === food2Y) {
+        // Collision with food2
+        body.push({ x: headX, y: headY, direction }); // Add a new segment
+        clearFood('food2'); // Clear the eaten food
+        placeFood('food2'); // Re-place only the eaten food
+        showBloodEffect(newX, newY); // Trigger blood effect at the head's position
+        score += 2; // Increase score
+        if (score > highScore) highScore = score; // Update high score
     } else {
-        // Move the body
-        body.push({ x: headX, y: headY, direction });
+        // Normal move: Shift the snake's body
+        body.push({ x: headX, y: headY, direction }); // Add the current head
         body.shift(); // Remove the tail
     }
 
-    // Check for self-collision
-    if (body.slice(0, -1).some(segment => segment.x === newX && segment.y === newY)) {
-        resetGame();  // Reset if the snake collides with itself
-        return;
-    }
-
-    // Handle cactus collision
+    // Check for collisions with obstacles
     if (cacti.some(cactus => cactus.x === newX && cactus.y === newY)) {
-        resetGame();  // Reset if the snake collides with a cactus
+        resetGame(); // Snake hits a cactus; reset the game
         return;
     }
-
-    // Handle rock collision, but don't reset the game
     if (rocks.some(rock => rock.x === newX && rock.y === newY)) {
-        handleRockCollision(newX, newY);
+        handleRockCollision(newX, newY); // Snake hits a rock; handle appropriately
     }
-
-    // Remove the previous head
-    const previousHeadCell = document.querySelector(`.cell[data-x="${headX}"][data-y="${headY}"]`);
-    if (previousHeadCell) {
-        previousHeadCell.classList.remove('head');
-        previousHeadCell.style.transform = ''; // Clear the rotation style
-    }
-
-    // Set the new head position
-    headX = newX;
-    headY = newY;
 
     // === New Check: Reset if only the head remains ===
     if (body.length === 0) {
-        resetGame();  // Reset if there are no body segments (only the head remains)
-        return;  // Exit early as the game is reset
+        resetGame(); // Reset if there are no body segments (only the head remains)
+        return; // Exit early as the game is reset
     }
 
-    // Update the body and head
-    updateBody();  // Update body first
-    updateHead();  // Then update the head last
+    // Update the head's position
+    const oldHeadX = headX;
+    const oldHeadY = headY;
+    headX = newX;
+    headY = newY;
+
+    // Remove the old head's visuals and adjust rotation
+    const oldHeadCell = document.querySelector(`.cell[data-x="${oldHeadX}"][data-y="${oldHeadY}"]`);
+    if (oldHeadCell) oldHeadCell.classList.remove('head');
+
+    // Add visuals for the new head position
+    const newHeadCell = document.querySelector(`.cell[data-x="${headX}"][data-y="${headY}"]`);
+    if (newHeadCell) {
+        newHeadCell.classList.add('head');
+        newHeadCell.style.transform = getRotation(direction, false); // Rotate the head
+    }
+
+    // Update the visuals for the body
+    updateBody();
+
+    // Update the score display
     updateScore();
 }
 
@@ -507,7 +639,6 @@ function handleRockCollision(x, y) {
     showRockEffect(x, y);
 }
 
-// Function to remove the rock from the grid
 // Function to remove a rock from the grid
 function removeRock(x, y) {
     // Find the index of the rock in the rocks array
@@ -588,8 +719,17 @@ setInterval(() => {
     moveFood();
 }, 1200);
 
+setInterval(() => {
+    moveFood1();
+}, 1000);
+
+setInterval(() => {
+    moveFood2();
+}, 800);
 // === Initial Setup ===
 updateHead();
-placeFood();
+placeFood('food');
+placeFood('food1');
+placeFood('food2');
 placeCacti();  // Place 20 cacti initially
 updateScore();

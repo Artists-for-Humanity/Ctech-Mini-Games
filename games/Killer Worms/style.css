@@ -99,12 +99,12 @@ body {
     background-size: cover;
 }
 
-.food2 {
+.food1 {
     background-image: url('z.Human2.png');
     
 }
 
-.food3 {
+.food2 {
     background-image: url('z.Human3.png');
     
 }
@@ -152,6 +152,19 @@ body {
     opacity: 1; /* Fully visible */
     transition: opacity 3s; /* Fade out transition */
     display: none; /* Initially hidden */
+}
+
+.cell {
+    position: relative; /* Ensure each cell can have layered children */
+}
+
+.cell .snake, .cell .food, .cell .rock1, .cell .rock2, .cell .rock3 {
+    z-index: 10;
+}
+
+
+.cell .cactus {
+    z-index: 20;
 }
 
 .rotate-vertical {
