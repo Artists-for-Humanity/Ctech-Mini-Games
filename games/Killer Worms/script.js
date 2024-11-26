@@ -257,79 +257,27 @@ function moveFood2() {
     if (food2Cell) food2Cell.classList.add('food2');
 }
 
-
-// === Reset Game Function ===
-
-// Function to reset the game
-// Function to reset the game
-function resetGame() {
-    // Clear all head classes from previous positions
-    const allHeadCells = document.querySelectorAll('.cell.head, .cell.rotate-up, .cell.rotate-down, .cell.rotate-left, .cell.rotate-right');
-    allHeadCells.forEach(cell => {
-        cell.classList.remove('head', 'rotate-up', 'rotate-down', 'rotate-left', 'rotate-right');
-    });
-
-    // Clear all cacti
-    const allCactusCells = document.querySelectorAll('.cell.cactus');
-    allCactusCells.forEach(cell => {
-        cell.classList.remove('cactus');
-    });
-
-    // Remove all rocks from the grid
-    rocks.forEach(rock => {
-        const rockCell = document.querySelector(`.cell[data-x="${rock.x}"][data-y="${rock.y}"]`);
-        if (rockCell) {
-            rockCell.classList.remove('rock1', 'rock2', 'rock3'); // Remove all rock classes
-        }
-    });
-    rocks = []; // Clear the rocks array
-
-    // Reset snake position
-    headX = gridWidth - 1; // Reset to start at the far right
-    headY = 0; // Reset to start at the top
-    body = [
-        { x: headX, y: headY, direction: 'ArrowLeft' },
-        { x: headX + 1, y: headY, direction: 'ArrowLeft' },
-        { x: headX + 2, y: headY, direction: 'ArrowLeft' },
-        { x: headX + 3, y: headY, direction: 'ArrowLeft' }
-    ]; // Start with 4 segments
-    turns = []; // Reset turns
-    direction = 'ArrowLeft'; // Reset direction
-    score = 0;
-
-    // Clear and re-place food
-    clearFood();
-    placeFood();
-
-    // Re-place cacti and rocks
-    placeCacti();
-    placeRocks();
-
-    // Update visuals
-    updateHead();
-    updateBody();
-    updateScore();
-}
-
-
-
 // === Place Rocks ===
 
 // Function to place 20 rocks randomly on the grid
+// Function to place rocks randomly
 // Function to place rocks randomly
 function placeRocks() {
     rocks = []; // Reset the rocks array
 
     for (let i = 0; i < 20; i++) {
         let rockX, rockY;
-        // Randomly place each rock, avoiding the snake's head, body, and food
+        // Randomly place each rock, avoiding the snake's head, body, food, and cacti
         do {
             rockX = Math.floor(Math.random() * gridWidth);
             rockY = Math.floor(Math.random() * gridHeight);
         } while (
             (rockX === headX && rockY === headY) || // Avoid the snake head
             body.some(segment => segment.x === rockX && segment.y === rockY) || // Avoid the body
-            (rockX === foodX && rockY === foodY) // Avoid the food
+            (rockX === foodX && rockY === foodY) || // Avoid main food
+            (rockX === food1X && rockY === food1Y) || // Avoid food1
+            (rockX === food2X && rockY === food2Y) || // Avoid food2
+            cacti.some(cactus => cactus.x === rockX && cactus.y === rockY) // Avoid cacti
         );
 
         rocks.push({ x: rockX, y: rockY });
@@ -489,19 +437,23 @@ function updateBody() {
 // === Cacti Functions ===
 
 // Function to place  cacti randomly
+// Function to place cacti randomly
 function placeCacti() {
     cacti = []; // Reset the cactus array
 
     for (let i = 0; i < 25; i++) {
         let cactusX, cactusY;
-        // Randomly place each cactus, avoiding the snake's head, body, and food
+        // Randomly place each cactus, avoiding the snake's head, body, food, and rocks
         do {
             cactusX = Math.floor(Math.random() * gridWidth);
             cactusY = Math.floor(Math.random() * gridHeight);
         } while (
             (cactusX === headX && cactusY === headY) || // Avoid the snake head
             body.some(segment => segment.x === cactusX && segment.y === cactusY) || // Avoid the body
-            (cactusX === foodX && cactusY === foodY) // Avoid the food
+            (cactusX === foodX && cactusY === foodY) || // Avoid food
+            (cactusX === food1X && cactusY === food1Y) || // Avoid food1
+            (cactusX === food2X && cactusY === food2Y) || // Avoid food2
+            rocks.some(rock => rock.x === cactusX && rock.y === cactusY) // Avoid rocks
         );
 
         cacti.push({ x: cactusX, y: cactusY });
@@ -511,6 +463,7 @@ function placeCacti() {
         }
     }
 }
+
 
 // === Game Loop ===
 function moveSnake() {
@@ -706,6 +659,55 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
+// Function to reset the game
+function resetGame() {
+    // Clear all head classes from previous positions
+    const allHeadCells = document.querySelectorAll('.cell.head, .cell.rotate-up, .cell.rotate-down, .cell.rotate-left, .cell.rotate-right');
+    allHeadCells.forEach(cell => {
+        cell.classList.remove('head', 'rotate-up', 'rotate-down', 'rotate-left', 'rotate-right');
+    });
+
+    // Clear all cacti
+    const allCactusCells = document.querySelectorAll('.cell.cactus');
+    allCactusCells.forEach(cell => {
+        cell.classList.remove('cactus');
+    });
+
+    // Remove all rocks from the grid
+    rocks.forEach(rock => {
+        const rockCell = document.querySelector(`.cell[data-x="${rock.x}"][data-y="${rock.y}"]`);
+        if (rockCell) {
+            rockCell.classList.remove('rock1', 'rock2', 'rock3'); // Remove all rock classes
+        }
+    });
+    rocks = []; // Clear the rocks array
+
+    // Reset snake position
+    headX = gridWidth - 1; // Reset to start at the far right
+    headY = 0; // Reset to start at the top
+    body = [
+        { x: headX, y: headY, direction: 'ArrowLeft' },
+        { x: headX + 1, y: headY, direction: 'ArrowLeft' },
+        { x: headX + 2, y: headY, direction: 'ArrowLeft' },
+    ]; // Start with 4 segments
+    turns = []; // Reset turns
+    direction = 'ArrowLeft'; // Reset direction
+    score = 0;
+
+    // Clear and re-place food
+    clearFood();
+    placeFood();
+
+    // Re-place cacti and rocks
+    placeCacti();
+    placeRocks();
+
+    // Update visuals
+    updateHead();
+    updateBody();
+    updateScore();
+}
+
 
 // === Game Loops ===
 
@@ -731,5 +733,5 @@ updateHead();
 placeFood('food');
 placeFood('food1');
 placeFood('food2');
-placeCacti();  // Place 20 cacti initially
+placeCacti();  // Place 25 cacti initially
 updateScore();

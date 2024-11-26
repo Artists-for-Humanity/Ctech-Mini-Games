@@ -111,18 +111,22 @@ body {
 
 .cactus {
     background-image: url('z.Cactus.png');
+    z-index: 10
 }
 
 .cell.rock1 {
     background-image: url('z.Rock1.png');
+    z-index: 1
 }
 
 .cell.rock2 {
     background-image: url('z.Rock2.png');
+    z-index: 1
 }
 
 .cell.rock3 {
     background-image: url('z.Rock3.png');
+    z-index: 1
 }
 
 
@@ -158,14 +162,7 @@ body {
     position: relative; /* Ensure each cell can have layered children */
 }
 
-.cell .snake, .cell .food, .cell .rock1, .cell .rock2, .cell .rock3 {
-    z-index: 10;
-}
 
-
-.cell .cactus {
-    z-index: 20;
-}
 
 .rotate-vertical {
     transform: scaleY(-1); /* Keep this if you still want to flip vertically */
