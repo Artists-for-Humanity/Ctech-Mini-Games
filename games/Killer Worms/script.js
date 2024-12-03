@@ -10,7 +10,6 @@ let body = [
     { x: headX, y: headY, direction: 'ArrowLeft' },
     { x: headX + 1, y: headY, direction: 'ArrowLeft' },
     { x: headX + 2, y: headY, direction: 'ArrowLeft' },
-    { x: headX + 3, y: headY, direction: 'ArrowLeft' }
 ];
 let turns = []; // To hold the positions of turns
 let direction = 'ArrowLeft'; // Initial direction
@@ -21,12 +20,6 @@ let canChangeDirection = true;  // Flag to track if direction change is allowed
 let nextDirection = null;  // Store the next direction to move after the delay
 const directionCooldown = 1;  // Cooldown time in milliseconds (200ms)
 
-function startCooldown() {
-    canChangeDirection = false; // Block further direction changes
-    setTimeout(() => {
-        canChangeDirection = true; // Allow direction changes after cooldown
-    }, directionCooldown);
-}
 
 // Create the grid and initialize cells
 const grid = document.getElementById('grid');
@@ -38,52 +31,6 @@ for (let y = 0; y < gridHeight; y++) {
         cell.dataset.y = y;
         grid.appendChild(cell);
     }
-}
-
-// Create a blood effect div and append it to the grid
-const bloodEffect = document.createElement('div');
-bloodEffect.classList.add('blood');
-document.getElementById('grid').appendChild(bloodEffect);
-
-// === Helper Functions ===
-
-// Function to update the score display
-function updateScore() {
-    const scoreDisplay = document.getElementById('score');
-    scoreDisplay.innerText = `Score: ${score} | High Score: ${highScore}`;
-}
-
-function startCooldown() {
-    canChangeDirection = false; // Block further direction changes
-    setTimeout(() => {
-        canChangeDirection = true; // Allow direction changes after cooldown
-    }, directionCooldown);
-}
-
-// Function to get rotation style based on direction and flip state
-function getRotation(direction, flip) {
-    let rotation = '';
-    switch (direction) {
-        case 'ArrowUp':
-            rotation = 'rotate(90deg)';
-            break;
-        case 'ArrowDown':
-            rotation = 'rotate(270deg)';
-            break;
-        case 'ArrowLeft':
-            rotation = 'rotate(0deg)';
-            break;
-        case 'ArrowRight':
-            rotation = 'rotate(180deg)';
-            break;
-    }
-
-    // Apply flipping if needed
-    if (flip) {
-        rotation += ' scaleY(-1)'; // Vertical flip
-    }
-
-    return rotation;
 }
 
 // === Game State Functions ===
@@ -137,10 +84,6 @@ function placeFood(type) {
     }
 }
 
-
-
-
-
 // Function to clear food from the grid
 function clearFood(type) {
     if (type === 'food') {
@@ -155,11 +98,7 @@ function clearFood(type) {
     }
 }
 
-
-
-
 // Function to move food randomly to a neighboring spot, avoiding obstacles
-// Move main food (food)
 function moveFood() {
     clearFood('food'); // Clear the main food
 
@@ -190,7 +129,6 @@ function moveFood() {
     const foodCell = document.querySelector(`.cell[data-x="${foodX}"][data-y="${foodY}"]`);
     if (foodCell) foodCell.classList.add('food');
 }
-
 
 // Move second food (food1)
 function moveFood1() {
@@ -224,7 +162,6 @@ function moveFood1() {
     if (food1Cell) food1Cell.classList.add('food1');
 }
 
-
 // Move third food (food2)
 function moveFood2() {
     clearFood('food2'); // Clear the third food
@@ -257,17 +194,16 @@ function moveFood2() {
     if (food2Cell) food2Cell.classList.add('food2');
 }
 
+
 // === Place Rocks ===
 
-// Function to place 20 rocks randomly on the grid
-// Function to place rocks randomly
-// Function to place rocks randomly
+// Function to place rocks 
 function placeRocks() {
     rocks = []; // Reset the rocks array
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 12; i++) {
         let rockX, rockY;
-        // Randomly place each rock, avoiding the snake's head, body, food, and cacti
+        // Randomly place each rock, avoiding the snake's head, body, food, cacti, and restricted area
         do {
             rockX = Math.floor(Math.random() * gridWidth);
             rockY = Math.floor(Math.random() * gridHeight);
@@ -277,7 +213,8 @@ function placeRocks() {
             (rockX === foodX && rockY === foodY) || // Avoid main food
             (rockX === food1X && rockY === food1Y) || // Avoid food1
             (rockX === food2X && rockY === food2Y) || // Avoid food2
-            cacti.some(cactus => cactus.x === rockX && cactus.y === rockY) // Avoid cacti
+            cacti.some(cactus => cactus.x === rockX && cactus.y === rockY) || // Avoid cacti
+            (rockX >= gridWidth - 5 && rockY < 5) // Avoid the top-right 5x5 area
         );
 
         rocks.push({ x: rockX, y: rockY });
@@ -295,13 +232,11 @@ function placeRocks() {
 // === Rock Collision Function ===
 
 // Function to handle collisions with rocks
-// Example: Remove a rock when the snake collides with it
 function handleRockCollision(x, y) {
     console.log(`Snake hit a rock at (${x}, ${y})`);
     removeRock(x, y); // Remove the rock
     // You can add additional logic here, such as shrinking the snake
 }
-
 
 // === Rock Visual Effect ===
 
@@ -353,6 +288,37 @@ function showRockEffect(x, y) {
     }, 2000);
 }
 
+// === Cacti Functions ===
+
+// Function to place cacti randomly
+function placeCacti() {
+    cacti = []; // Reset the cactus array
+
+    for (let i = 0; i < 25; i++) {
+        let cactusX, cactusY;
+        // Randomly place each cactus, avoiding the snake's head, body, food, rocks, and restricted area
+        do {
+            cactusX = Math.floor(Math.random() * gridWidth);
+            cactusY = Math.floor(Math.random() * gridHeight);
+        } while (
+            (cactusX === headX && cactusY === headY) || // Avoid the snake head
+            body.some(segment => segment.x === cactusX && segment.y === cactusY) || // Avoid the body
+            (cactusX === foodX && cactusY === foodY) || // Avoid food
+            (cactusX === food1X && cactusY === food1Y) || // Avoid food1
+            (cactusX === food2X && cactusY === food2Y) || // Avoid food2
+            rocks.some(rock => rock.x === cactusX && rock.y === cactusY) || // Avoid rocks
+            (cactusX >= gridWidth - 5 && cactusY < 5) // Avoid the top-right 5x5 area
+        );
+
+        cacti.push({ x: cactusX, y: cactusY });
+        const cactusCell = document.querySelector(`.cell[data-x="${cactusX}"][data-y="${cactusY}"]`);
+        if (cactusCell) {
+            cactusCell.classList.add('cactus');
+        }
+    }
+}
+
+
 // === Blood Effect ===
 
 // Function to show blood effect at the head's position
@@ -377,93 +343,80 @@ function showBloodEffect(x, y) {
     }, 3000); // Match the duration of the fade out
 }
 
-// === Rendering Functions ===
+// Create a blood effect div and append it to the grid
+const bloodEffect = document.createElement('div');
+bloodEffect.classList.add('blood');
+document.getElementById('grid').appendChild(bloodEffect);
 
-// Function to update head (snake head) position
-function updateHead() {
-    const currentHeadCell = document.querySelector(`.cell[data-x="${headX}"][data-y="${headY}"]`);
-    currentHeadCell.classList.add('head');
-    currentHeadCell.style.transform = getRotation(direction, false); // Set rotation style without flip
+// function to handle cooldown before you can move //
+function startCooldown() {
+    canChangeDirection = false; // Block further direction changes
+    setTimeout(() => {
+        canChangeDirection = true; // Allow direction changes after cooldown
+    }, directionCooldown);
 }
 
-// Function to update body segments
-function updateBody() {
-    const bodyCells = document.querySelectorAll('.cell.body, .cell.tail, .cell.turn');
-    bodyCells.forEach(cell => {
-        cell.classList.remove('body', 'tail', 'turn');
-        cell.style.transform = ''; // Clear previous rotation
-    });
-
-    body.forEach((segment, index) => {
-        const segmentCell = document.querySelector(`.cell[data-x="${segment.x}"][data-y="${segment.y}"]`);
-        
-        // Determine if a flip is needed
-        let flip = false;
-
-        if (index > 0) {
-            const prevSegment = body[index - 1];
-            if ((prevSegment.direction === 'ArrowDown' && segment.direction === 'ArrowLeft') ||
-                (prevSegment.direction === 'ArrowUp' && segment.direction === 'ArrowRight')) {
-                flip = true; // Vertical flip
-            } else if ((prevSegment.direction === 'ArrowRight' && segment.direction === 'ArrowDown') ||
-                       (prevSegment.direction === 'ArrowLeft' && segment.direction === 'ArrowUp')) {
-                flip = true; // Horizontal flip
-            }
-        }
-
-        // Check if this segment is a turn
-        if (index > 0 && segment.direction !== body[index - 1].direction) {
-            segmentCell.classList.add('turn');
-            segmentCell.style.transform = getRotation(segment.direction, flip); // Set rotation style for turn
-        } else {
-            segmentCell.classList.add('body');
-            segmentCell.style.transform = getRotation(segment.direction, flip); // Set rotation style for body
-        }
-    });
-
-    if (body.length > 0) {
-        const tailCell = document.querySelector(`.cell[data-x="${body[0].x}"][data-y="${body[0].y}"]`);
-        tailCell.classList.add('tail'); // Tail
-        tailCell.style.transform = getRotation(body[0].direction, false); // Tail rotation without flip
-    }
-
-    turns.forEach(turn => {
-        const turnCell = document.querySelector(`.cell[data-x="${turn.x}"][data-y="${turn.y}"]`);
-        turnCell.classList.add('turn');
-        turnCell.style.transform = getRotation(turn.direction, false); // Set rotation for turns without flip
-    });
-}
-
-// === Cacti Functions ===
-
-// Function to place  cacti randomly
-// Function to place cacti randomly
-function placeCacti() {
-    cacti = []; // Reset the cactus array
-
-    for (let i = 0; i < 25; i++) {
-        let cactusX, cactusY;
-        // Randomly place each cactus, avoiding the snake's head, body, food, and rocks
-        do {
-            cactusX = Math.floor(Math.random() * gridWidth);
-            cactusY = Math.floor(Math.random() * gridHeight);
-        } while (
-            (cactusX === headX && cactusY === headY) || // Avoid the snake head
-            body.some(segment => segment.x === cactusX && segment.y === cactusY) || // Avoid the body
-            (cactusX === foodX && cactusY === foodY) || // Avoid food
-            (cactusX === food1X && cactusY === food1Y) || // Avoid food1
-            (cactusX === food2X && cactusY === food2Y) || // Avoid food2
-            rocks.some(rock => rock.x === cactusX && rock.y === cactusY) // Avoid rocks
-        );
-
-        cacti.push({ x: cactusX, y: cactusY });
-        const cactusCell = document.querySelector(`.cell[data-x="${cactusX}"][data-y="${cactusY}"]`);
-        if (cactusCell) {
-            cactusCell.classList.add('cactus');
+// === Input Handling ===
+window.addEventListener('keydown', (event) => {
+    // Only process the event if the cooldown is not active
+    if (canChangeDirection && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        // Ensure the snake doesn't reverse into itself
+        if (event.key === 'ArrowUp' && direction !== 'ArrowDown') {
+            nextDirection = 'ArrowUp';  // Queue the direction change
+            startCooldown();  // Start cooldown after direction change
+        } else if (event.key === 'ArrowDown' && direction !== 'ArrowUp') {
+            nextDirection = 'ArrowDown';  // Queue the direction change
+            startCooldown();  // Start cooldown after direction change
+        } else if (event.key === 'ArrowLeft' && direction !== 'ArrowRight') {
+            nextDirection = 'ArrowLeft';  // Queue the direction change
+            startCooldown();  // Start cooldown after direction change
+        } else if (event.key === 'ArrowRight' && direction !== 'ArrowLeft') {
+            nextDirection = 'ArrowRight';  // Queue the direction change
+            startCooldown();  // Start cooldown after direction change
         }
     }
+});
+
+// === Helper Functions ===
+
+// Function to update the score display
+function updateScore() {
+    const scoreDisplay = document.getElementById('score');
+    scoreDisplay.innerText = `Score: ${score} | High Score: ${highScore}`;
 }
 
+function startCooldown() {
+    canChangeDirection = false; // Block further direction changes
+    setTimeout(() => {
+        canChangeDirection = true; // Allow direction changes after cooldown
+    }, directionCooldown);
+}
+
+// Function to get rotation style based on direction and flip state
+function getRotation(direction, flip) {
+    let rotation = '';
+    switch (direction) {
+        case 'ArrowUp':
+            rotation = 'rotate(90deg)';
+            break;
+        case 'ArrowDown':
+            rotation = 'rotate(270deg)';
+            break;
+        case 'ArrowLeft':
+            rotation = 'rotate(0deg)';
+            break;
+        case 'ArrowRight':
+            rotation = 'rotate(180deg)';
+            break;
+    }
+
+    // Apply flipping if needed
+    if (flip) {
+        rotation += ' scaleY(-1)'; // Vertical flip
+    }
+
+    return rotation;
+}
 
 // === Game Loop ===
 function moveSnake() {
@@ -574,7 +527,62 @@ function moveSnake() {
     updateScore();
 }
 
+// === Rendering Functions ===
 
+// Function to update head (snake head) position
+function updateHead() {
+    const currentHeadCell = document.querySelector(`.cell[data-x="${headX}"][data-y="${headY}"]`);
+    currentHeadCell.classList.add('head');
+    currentHeadCell.style.transform = getRotation(direction, false); // Set rotation style without flip
+}
+
+// Function to update body segments
+function updateBody() {
+    const bodyCells = document.querySelectorAll('.cell.body, .cell.tail, .cell.turn');
+    bodyCells.forEach(cell => {
+        cell.classList.remove('body', 'tail', 'turn');
+        cell.style.transform = ''; // Clear previous rotation
+    });
+
+    body.forEach((segment, index) => {
+        const segmentCell = document.querySelector(`.cell[data-x="${segment.x}"][data-y="${segment.y}"]`);
+        
+        // Determine if a flip is needed
+        let flip = false;
+
+        if (index > 0) {
+            const prevSegment = body[index - 1];
+            if ((prevSegment.direction === 'ArrowDown' && segment.direction === 'ArrowLeft') ||
+                (prevSegment.direction === 'ArrowUp' && segment.direction === 'ArrowRight')) {
+                flip = true; // Vertical flip
+            } else if ((prevSegment.direction === 'ArrowRight' && segment.direction === 'ArrowDown') ||
+                       (prevSegment.direction === 'ArrowLeft' && segment.direction === 'ArrowUp')) {
+                flip = true; // Horizontal flip
+            }
+        }
+
+        // Check if this segment is a turn
+        if (index > 0 && segment.direction !== body[index - 1].direction) {
+            segmentCell.classList.add('turn');
+            segmentCell.style.transform = getRotation(segment.direction, flip); // Set rotation style for turn
+        } else {
+            segmentCell.classList.add('body');
+            segmentCell.style.transform = getRotation(segment.direction, flip); // Set rotation style for body
+        }
+    });
+
+    if (body.length > 0) {
+        const tailCell = document.querySelector(`.cell[data-x="${body[0].x}"][data-y="${body[0].y}"]`);
+        tailCell.classList.add('tail'); // Tail
+        tailCell.style.transform = getRotation(body[0].direction, false); // Tail rotation without flip
+    }
+
+    turns.forEach(turn => {
+        const turnCell = document.querySelector(`.cell[data-x="${turn.x}"][data-y="${turn.y}"]`);
+        turnCell.classList.add('turn');
+        turnCell.style.transform = getRotation(turn.direction, false); // Set rotation for turns without flip
+    });
+}
 
 // === Rock Collision Function ===
 
@@ -634,30 +642,7 @@ function showRockEffect(x, y) {
     }, 2000);
 }
 
-// === Initial Setup ===
-placeRocks();  // Place 20 rocks initially
-
-// === Input Handling ===
-
-window.addEventListener('keydown', (event) => {
-    // Only process the event if the cooldown is not active
-    if (canChangeDirection && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
-        // Ensure the snake doesn't reverse into itself
-        if (event.key === 'ArrowUp' && direction !== 'ArrowDown') {
-            nextDirection = 'ArrowUp';  // Queue the direction change
-            startCooldown();  // Start cooldown after direction change
-        } else if (event.key === 'ArrowDown' && direction !== 'ArrowUp') {
-            nextDirection = 'ArrowDown';  // Queue the direction change
-            startCooldown();  // Start cooldown after direction change
-        } else if (event.key === 'ArrowLeft' && direction !== 'ArrowRight') {
-            nextDirection = 'ArrowLeft';  // Queue the direction change
-            startCooldown();  // Start cooldown after direction change
-        } else if (event.key === 'ArrowRight' && direction !== 'ArrowLeft') {
-            nextDirection = 'ArrowRight';  // Queue the direction change
-            startCooldown();  // Start cooldown after direction change
-        }
-    }
-});
+placeRocks(); 
 
 // Function to reset the game
 function resetGame() {
@@ -689,7 +674,7 @@ function resetGame() {
         { x: headX, y: headY, direction: 'ArrowLeft' },
         { x: headX + 1, y: headY, direction: 'ArrowLeft' },
         { x: headX + 2, y: headY, direction: 'ArrowLeft' },
-    ]; // Start with 4 segments
+    ]; 
     turns = []; // Reset turns
     direction = 'ArrowLeft'; // Reset direction
     score = 0;
@@ -708,15 +693,11 @@ function resetGame() {
     updateScore();
 }
 
-
 // === Game Loops ===
-
-// Game loop to move the snake every 200 milliseconds
 setInterval(() => {
     moveSnake();
 }, 200);
 
-// Move food every 800 milliseconds
 setInterval(() => {
     moveFood();
 }, 1200);
@@ -728,10 +709,11 @@ setInterval(() => {
 setInterval(() => {
     moveFood2();
 }, 800);
+
 // === Initial Setup ===
 updateHead();
 placeFood('food');
 placeFood('food1');
 placeFood('food2');
-placeCacti();  // Place 25 cacti initially
+placeCacti();
 updateScore();
