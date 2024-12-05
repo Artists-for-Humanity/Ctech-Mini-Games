@@ -16,6 +16,7 @@ let direction = 'ArrowLeft'; // Initial direction
 let score = 0;
 let highScore = 0;
 let cacti = []; // Array to hold cactus positions
+let rocks = [];
 let canChangeDirection = true;  // Flag to track if direction change is allowed
 let nextDirection = null;  // Store the next direction to move after the delay
 const directionCooldown = 1;  // Cooldown time in milliseconds (200ms)
@@ -60,8 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show the game canvas
         gameCanvas.style.display = 'block';
 
-        resetGame();
-        
         // Initialize your snake game here
         startGame();
     });
@@ -110,6 +109,15 @@ for (let y = 0; y < gridHeight; y++) {
 }
 
 // === Game State Functions ===
+let xxx = []
+function testA() {
+    let xxx = ""
+    xxx.some()
+}
+
+function testB() {
+ xxx.some()
+}
 
 // Function to place food at the initial position
 function placeFood(type) {
@@ -156,7 +164,7 @@ function placeFood(type) {
     if (foodCell) {
         foodCell.classList.add(foodClass);
     } else {
-        console.error(`Failed to place ${foodClass} at (${foodXToPlace}, ${foodYToPlace})`);
+        console.error(`Failed to place ${foodClass} at (${foodXToPlace}, ${foodYToPlace}`);
     }
 }
 
@@ -309,9 +317,16 @@ function placeRocks() {
 
 // Function to handle collisions with rocks
 function handleRockCollision(x, y) {
-    console.log(`Snake hit a rock at (${x}, ${y})`);
-    removeRock(x, y); // Remove the rock
-    // You can add additional logic here, such as shrinking the snake
+    // Remove the rock from the grid
+    removeRock(x, y);
+
+    // Shrink the snake by removing the last body segment (tail)
+    if (body.length > 0) {
+        body.pop(); // Remove the last segment of the body (tail)
+    }
+
+    // Show a visual effect when colliding with the rock
+    showRockEffect(x, y);
 }
 
 // === Rock Visual Effect ===
@@ -337,32 +352,32 @@ function showRockEffect(x, y) {
 }
 
 // Function to handle collisions with rocks
-function handleRockCollision(x, y) {
-    // Add a visual effect to show the collision with a rock
-    showRockEffect(x, y);
-}
+// function handleRockCollision(x, y) {
+//     // Add a visual effect to show the collision with a rock
+//     showRockEffect(x, y);
+// }
 
 // === Rock Visual Effect ===
 
 // Function to show a collision effect when hitting a rock
-function showRockEffect(x, y) {
-    const cellSize = 50;
-    const rockEffectSize = cellSize * 2;
+// function showRockEffect(x, y) {
+//     const cellSize = 50;
+//     const rockEffectSize = cellSize * 2;
 
-    // Set the position of the effect based on the rock's coordinates
-    bloodEffect.style.left = `${x * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
-    bloodEffect.style.top = `${y * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
-    bloodEffect.style.display = 'block';
-    bloodEffect.style.opacity = '1';
+//     // Set the position of the effect based on the rock's coordinates
+//     bloodEffect.style.left = `${x * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
+//     bloodEffect.style.top = `${y * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
+//     bloodEffect.style.display = 'block';
+//     bloodEffect.style.opacity = '1';
 
-    setTimeout(() => {
-        bloodEffect.style.opacity = '0';
-    }, 1000);
+//     setTimeout(() => {
+//         bloodEffect.style.opacity = '0';
+//     }, 1000);
 
-    setTimeout(() => {
-        bloodEffect.style.display = 'none';
-    }, 2000);
-}
+//     setTimeout(() => {
+//         bloodEffect.style.display = 'none';
+//     }, 2000);
+// }
 
 // === Cacti Functions ===
 
@@ -461,12 +476,12 @@ function updateScore() {
     scoreDisplay.innerText = `Score: ${score} | High Score: ${highScore}`;
 }
 
-function startCooldown() {
-    canChangeDirection = false; // Block further direction changes
-    setTimeout(() => {
-        canChangeDirection = true; // Allow direction changes after cooldown
-    }, directionCooldown);
-}
+// function startCooldown() {
+//     canChangeDirection = false; // Block further direction changes
+//     setTimeout(() => {
+//         canChangeDirection = true; // Allow direction changes after cooldown
+//     }, directionCooldown);
+// }
 
 // Function to get rotation style based on direction and flip state
 function getRotation(direction, flip) {
@@ -663,18 +678,18 @@ function updateBody() {
 // === Rock Collision Function ===
 
 // Function to handle collisions with rocks
-function handleRockCollision(x, y) {
-    // Remove the rock from the grid
-    removeRock(x, y);
+// function handleRockCollision(x, y) {
+//     // Remove the rock from the grid
+//     removeRock(x, y);
 
-    // Shrink the snake by removing the last body segment (tail)
-    if (body.length > 0) {
-        body.pop(); // Remove the last segment of the body (tail)
-    }
+//     // Shrink the snake by removing the last body segment (tail)
+//     if (body.length > 0) {
+//         body.pop(); // Remove the last segment of the body (tail)
+//     }
 
-    // Show a visual effect when colliding with the rock
-    showRockEffect(x, y);
-}
+//     // Show a visual effect when colliding with the rock
+//     showRockEffect(x, y);
+// }
 
 // Function to remove a rock from the grid
 function removeRock(x, y) {
@@ -698,25 +713,25 @@ function removeRock(x, y) {
 
 // === Rock Visual Effect ===
 
-// Function to show a collision effect when hitting a rock
-function showRockEffect(x, y) {
-    const cellSize = 50;
-    const rockEffectSize = cellSize * 2;
+// // Function to show a collision effect when hitting a rock
+// function showRockEffect(x, y) {
+//     const cellSize = 50;
+//     const rockEffectSize = cellSize * 2;
 
-    // Set the position of the effect based on the rock's coordinates
-    bloodEffect.style.left = `${x * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
-    bloodEffect.style.top = `${y * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
-    bloodEffect.style.display = 'block';
-    bloodEffect.style.opacity = '1';
+//     // Set the position of the effect based on the rock's coordinates
+//     bloodEffect.style.left =  `${x * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
+//     bloodEffect.style.top = `${y * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
+//     bloodEffect.style.display = 'block';
+//     bloodEffect.style.opacity = '1';
 
-    setTimeout(() => {
-        bloodEffect.style.opacity = '0';
-    }, 1000);
+//     setTimeout(() => {
+//         bloodEffect.style.opacity = '0';
+//     }, 1000);
 
-    setTimeout(() => {
-        bloodEffect.style.display = 'none';
-    }, 2000);
-}
+//     setTimeout(() => {
+//         bloodEffect.style.display = 'none';
+//     }, 2000);
+// }
 
 placeRocks(); 
 
