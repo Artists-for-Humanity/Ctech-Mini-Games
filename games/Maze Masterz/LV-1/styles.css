@@ -63,9 +63,3 @@ body {
     opacity: 0.5; /* Semi-transparent */
     z-index: 5;
 }
-.enemy{
-    height: 50px;
-    width: 50px;
-    background-color: aqua;
-    margin: 0px;
-}
