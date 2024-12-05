@@ -24,7 +24,7 @@ const spriteSpeed = 5;
 const initialSpriteX = 30;
 const initialSpriteY = 750;
 
-// Define maze barriers
+/// Define maze barriers
 const barriers = [
     { x: 0, y: 75, width: 700, height: 50, element: document.getElementById('barrier1') },
     { x: 400, y: 125, width: 300, height: 75, element: document.getElementById('barrier2') },
@@ -40,9 +40,10 @@ const barriers = [
     { x: 0, y: 0, width: 1280, height: 10, element: createBarrier() },
     { x: 100, y: 200, width: 150, height: 50, element: createBarrier() },
     { x: 370, y: 380, width: 300, height: 50, element: createBarrier() },
-    { x: 500, y: 500, width: 100, height: 150, element: createBarrier() },
-    { x: 500, y:730, width: 200, height: 100, element: createBarrier() },
-    { x: 300, y:630, width: 200, height: 100, element: createBarrier() },
+    { x: 500, y: 500, width: 100, height: 225, element: createBarrier() },
+    { x: 500, y:770, width: 200, height: 50, element: createBarrier() },
+    { x: 310, y:630, width: 130, height: 100, element: createBarrier() },
+    { x: 600, y:630, width: 200, height: 100, element: createBarrier() },
     { x: 200, y: 610, width: 50, height: 220, element: createBarrier() }
 ];
 
