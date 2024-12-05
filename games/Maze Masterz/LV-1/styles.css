@@ -5,6 +5,7 @@
     border: 40px solid black;
     position: relative;
     overflow: hidden;
+    background-image:url(assets/boarder2.png);
 }
 
 /* Body */
@@ -61,4 +62,10 @@ body {
     background-color: green;
     opacity: 0.5; /* Semi-transparent */
     z-index: 5;
+}
+.enemy{
+    height: 50px;
+    width: 50px;
+    background-color: aqua;
+    margin: 0px;
 }

@@ -5,7 +5,15 @@ const collisionImage = document.getElementById('collisionImage');
 const winPanel = document.getElementById('winPanel');
 const resetButton = document.getElementById('resetButton');
 const winAreaElement = document.getElementById('winArea');
+const enemy = {
+    x: 300, // Initial x position
+    y: 400, // Initial y position
+    speed: 2, // Movement speed
+    direction: 1, // 1 for right, -1 for left
+    patrolRange: 200 // Distance to patrol
+  };
 let collisionTimeout;
+
 
 // Sprite properties
 let spriteX = 30;
@@ -13,7 +21,6 @@ let spriteY = 750;
 const spriteWidth = 50;
 const spriteHeight = 50;
 const spriteSpeed = 5;
-
 const initialSpriteX = 30;
 const initialSpriteY = 750;
 
@@ -34,6 +41,8 @@ const barriers = [
     { x: 100, y: 200, width: 150, height: 50, element: createBarrier() },
     { x: 370, y: 380, width: 300, height: 50, element: createBarrier() },
     { x: 500, y: 500, width: 100, height: 150, element: createBarrier() },
+    { x: 500, y:730, width: 200, height: 100, element: createBarrier() },
+    { x: 300, y:630, width: 200, height: 100, element: createBarrier() },
     { x: 200, y: 610, width: 50, height: 220, element: createBarrier() }
 ];
 
@@ -56,6 +65,24 @@ window.addEventListener('keyup', (e) => {
     if (e.key === 's') keys.s = false;
     if (e.key === 'd') keys.d = false;
 });
+
+// function render() {
+//     // Draw the enemy at its current position
+//     // ...
+//   }
+
+function update() {
+    // Move the enemy
+    enemy.x += enemy.speed * enemy.direction;
+  
+    // Check if the enemy has reached the edge of its patrol range
+    if (Math.abs(enemy.x - 100) >= enemy.patrolRange) {
+      enemy.direction *= -1; // Reverse the direction
+    }
+  
+    // Update the enemy's visual representation on the screen
+    // ...
+  }
 
 // Function to create and return a new barrier element
 function createBarrier() {
