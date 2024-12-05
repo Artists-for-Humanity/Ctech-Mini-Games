@@ -6,7 +6,51 @@ body {
     background-size: cover; /* Ensure the image covers the entire screen */
     background-position: center center; /* Center the image */
     background-attachment: fixed; /* Keeps the image fixed while scrolling */
+    overflow: hidden;
 }
+
+
+#main-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent overlay */
+    z-index: 10;
+}
+
+#background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+#title-image {
+    width: 500px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+#start-button {
+    width: 300px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#start-button:hover {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
 
 #score-container {
     display: flex; /* Align score and high score sections horizontally */
@@ -111,7 +155,7 @@ body {
 
 .cactus {
     background-image: url('z.Cactus.png');
-    z-index: 10
+    z-index: 1
 }
 
 .cell.rock1 {

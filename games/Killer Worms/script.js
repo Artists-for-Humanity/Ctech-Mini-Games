@@ -20,6 +20,82 @@ let canChangeDirection = true;  // Flag to track if direction change is allowed
 let nextDirection = null;  // Store the next direction to move after the delay
 const directionCooldown = 1;  // Cooldown time in milliseconds (200ms)
 
+document.addEventListener('DOMContentLoaded', () => {
+    const mainMenu = document.getElementById('main-menu');
+    const gameCanvas = document.getElementById('game-canvas');
+    const startButton = document.getElementById('start-button');
+
+    startButton.addEventListener('click', () => {
+        // Hide the main menu
+        mainMenu.style.display = 'none';
+
+        // Show the game canvas
+        gameCanvas.style.display = 'block';
+
+        // Initialize your snake game here
+        startGame();
+    });
+
+    function startGame() {
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Snake game logic here
+        console.log('Game started!');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const mainMenu = document.getElementById('main-menu');
+    const gameCanvas = document.getElementById('game-canvas');
+    const startButton = document.getElementById('start-button');
+
+    // Start button click event
+    startButton.addEventListener('click', () => {
+        // Hide the main menu
+        mainMenu.style.display = 'none';
+
+        // Show the game canvas
+        gameCanvas.style.display = 'block';
+
+        resetGame();
+        
+        // Initialize your snake game here
+        startGame();
+    });
+
+    // Listen for the Escape key to bring back the main menu
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            // Show the main menu
+            mainMenu.style.display = 'flex';
+
+            // Hide the game canvas
+            gameCanvas.style.display = 'none';
+
+            // Optional: Reset the game state if needed
+            resetGame();
+        }
+    });
+
+    function startGame() {
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Your snake game logic here
+        console.log('Game started!');
+    }
+
+    function resetGame() {
+        // Add logic to reset your game here if needed
+        console.log('Game reset!');
+    }
+});
+
 
 // Create the grid and initialize cells
 const grid = document.getElementById('grid');
