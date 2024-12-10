@@ -10,54 +10,46 @@
 
   <body>
     <div id="main-menu">
-      <img id="background-image" src="z.BG.png" alt="Background">
-      <img id="title-image" src="title.png" alt="title">
-      <img id="start-button" src="click.play.png" alt="StartButton">
-  </div>
+      <div id="menu-background" style="display:grid">
+        <img id="menu-image" src="MENU.png" alt="menu-image" style="display:none" >
+        <img id="title-image" src="title.png" alt="title" style="margin: auto; height: 80px">
+        <img id="start-button" src="click.play.png" alt="StartButton" style="display:block">
+      </div> 
+      
+    </div>
 
-    <div id="score-container">
-      <!-- Separate section for Score -->
-      <div id="score-section">
-        <div id="score-icon"></div>
-        <span id="score">Score: 0</span>
+
+    <div id="game">
+      <div id="game-score">
+        <div id="current-score">
+          <span id="score">Score: 0</span>
+        </div>
+       
+
+        <div id="high-score">
+          <span id="score">High-Score: 0</span>
+
+        </div>
       </div>
-    
-      <!-- Separate section for High Score -->
-      <div id="high-score-section">
-        <div id="high-score-icon"></div>
-        <span id="high-score"></span>
-      </div>
+      
+
+      <div id="game-board">
+        <div class="game-border">
+          <div class="grid" id="grid">
+
+          </div>
+        </div>
+
+      </div>  
     </div>
     
-    
-  </div>
-  
+    <img id="background-image" src="z.BG.png" style="display:none"/>
 
-    <container_board>
-        <div class="game-border-1">
-            <div class="grid" id="grid"></div>
-          <!-- <img id="board" src="SW-BoardA.png" alt="sandworm-board" /> -->
+  </body> 
     
-          <!-- <div id="game-board"></div> -->
-        </div>
-        <!-- <hi id="instruction-text">Press spacebar to start the game</hi> -->
-        
-    </container_board>
-</body>
-<img id="head" src="SW-Head.png" alt="sandworm-head" style="display:none"/>
-<img id="body" src="SW-Body.png" alt="sandworm-body" style="display:none"/>
-<img id="tail" src="SW-Tail.png" alt="sandworm-tail" style="display:none"/>
-<img id="turn" src="SW-Turn.png" alt="sandworm-turn" style="display:none" />
-<img id="food" src="z.Human.png" alt="food" style="display:none" />
-<img id="food2" src="z.Human2.png" alt="food2" style="display:none" />
-<img id="food3" src="z.Human3.png" alt="food3" style="display:none" />
-<img id="blood" src="z.Blood.png" style="display: none; position: absolute; z-index: 0;" />
-<img id="background" src="z.BG.png" style="display:none"/>
-<img id="cactus" src="z.Cactus.png" style="display:none"/>
-<img id="rock1" src="z.Rock1.png" style="display:none"/>
-<img id="rock2" src="z.Rock2.png" style="display:none"/>
-<img id="rock3" src="z.Rock3.png" style="display:none"/>
-<img id="trophy" src="z.Trophy.png" style="display:none"/>
-<img id="dead" src="z.Dead.png" style="display:none"/>
-<img id="Arrow_keys" src="z.ArrowKeys.png" style="display:none"/>
-</html>
+    
+
+
+
+
+
