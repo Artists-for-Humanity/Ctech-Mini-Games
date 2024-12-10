@@ -130,7 +130,7 @@ function placeFood(type) {
     } else if (type === 'food2') {
         foodClass = 'food2';
     } else {
-        console.error(`Unknown food type: ${type}`);
+        console.log(`Unknown food type: ${type}`);
         return;
     }
 
@@ -350,34 +350,6 @@ function showRockEffect(x, y) {
         bloodEffect.style.display = 'none';
     }, 2000);
 }
-
-// Function to handle collisions with rocks
-// function handleRockCollision(x, y) {
-//     // Add a visual effect to show the collision with a rock
-//     showRockEffect(x, y);
-// }
-
-// === Rock Visual Effect ===
-
-// Function to show a collision effect when hitting a rock
-// function showRockEffect(x, y) {
-//     const cellSize = 50;
-//     const rockEffectSize = cellSize * 2;
-
-//     // Set the position of the effect based on the rock's coordinates
-//     bloodEffect.style.left = `${x * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
-//     bloodEffect.style.top = `${y * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
-//     bloodEffect.style.display = 'block';
-//     bloodEffect.style.opacity = '1';
-
-//     setTimeout(() => {
-//         bloodEffect.style.opacity = '0';
-//     }, 1000);
-
-//     setTimeout(() => {
-//         bloodEffect.style.display = 'none';
-//     }, 2000);
-// }
 
 // === Cacti Functions ===
 
@@ -712,26 +684,6 @@ function removeRock(x, y) {
 
 
 // === Rock Visual Effect ===
-
-// // Function to show a collision effect when hitting a rock
-// function showRockEffect(x, y) {
-//     const cellSize = 50;
-//     const rockEffectSize = cellSize * 2;
-
-//     // Set the position of the effect based on the rock's coordinates
-//     bloodEffect.style.left =  `${x * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
-//     bloodEffect.style.top = `${y * cellSize - (rockEffectSize / 2) + (cellSize / 2)}px`;
-//     bloodEffect.style.display = 'block';
-//     bloodEffect.style.opacity = '1';
-
-//     setTimeout(() => {
-//         bloodEffect.style.opacity = '0';
-//     }, 1000);
-
-//     setTimeout(() => {
-//         bloodEffect.style.display = 'none';
-//     }, 2000);
-// }
 
 placeRocks(); 
 
