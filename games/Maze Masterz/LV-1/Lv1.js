@@ -41,9 +41,10 @@ const barriers = [
     { x: 100, y: 200, width: 150, height: 50, element: createBarrier() },
     { x: 370, y: 380, width: 300, height: 50, element: createBarrier() },
     { x: 500, y: 500, width: 100, height: 225, element: createBarrier() },
-    { x: 500, y:770, width: 200, height: 50, element: createBarrier() },
+    { x: 500, y:790, width: 200, height: 50, element: createBarrier() },
     { x: 310, y:630, width: 130, height: 100, element: createBarrier() },
-    { x: 600, y:630, width: 200, height: 100, element: createBarrier() },
+    { x: 600, y:650, width: 200, height: 80, element: createBarrier() },
+    { x: 800, y:680, width: 200, height: 80, element: createBarrier() },
     { x: 200, y: 610, width: 50, height: 220, element: createBarrier() }
 ];
 
